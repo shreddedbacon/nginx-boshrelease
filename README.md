@@ -194,12 +194,12 @@ sudo route add -net 10.244.0.0/16 gw 192.168.50.6
 ```
 Run the deployment
 ```
-bosh -e vbox -d nginx deploy examples/vbox-deployment.yml
+bosh -e vbox -d nginx deploy examples/deployment.yml
 ```
 Watch as the director creates an nginx instance, you can visit the static page here: http://10.244.0.50
 
 ## Further examples
-### Increase instances in single subnet
+### Increase instances in network
 Now that you have a single instance running, lets build up another using an operations file
 ```
 bosh -e vbox -d nginx deploy examples/vbox-deployment.yml -o examples/ops-instances.yml
@@ -223,49 +223,6 @@ The code in the operations file is this
 The first block adds a second static IP address to the available IPs for the instance group called <b>nginx</b>.
 
 The second block increases the number of instances to build from 1 to 2.
-
-### Spin up 1 more servers in a different subnet under a different instance group
-
-You have two nginx servers running from the previous deployment, but need to spin up 1 more in a different availability zone or subnet for whatever reason.
-
-Use an operations file
-```
-bosh -e vbox -d nginx deploy examples/vbox-deployment.yml -o examples/ops-instances.yml -o examples/ops-multisubnet.yml
-```
-This will spin up to instances in the subnet 10.244.1.0/24 accessible on http://10.244.1.50
-
-The code in the operations file is this
-```
-- type: replace
-  path: /instance_groups/name=nginx2?
-  value:
-    name: nginx2
-    instances: 1
-    resource_pool: default
-    vm_type: default
-    azs: [z1]
-    persistent_disk_type: default
-    networks:
-    - name: nginx
-      static_ips:
-        - 10.244.1.50
-    jobs:
-    - name: nginx
-      release: nginx
-```
-Basically just an entire instance group block defined. You could also split this up into sections if you wanted to do more complex tasks.
-
-You should have 3 instances running now.
-
-### Drop back to only needing 1 instance in the first subnet instead of two
-Dropping back to only needing 1 instance is easy as just removing the first ops file from the deployment
-```
-bosh -e vbox -d nginx deploy examples/vbox-deployment.yml -o examples/ops-multisubnet.yml
-```
-If you want to remove the second subnet entirely, just remove both ops file from the deployment
-```
-bosh -e vbox -d nginx deploy examples/vbox-deployment.yml
-```
 
 # Delete the deployment
 Once you're done, you can delete the entire deployment
