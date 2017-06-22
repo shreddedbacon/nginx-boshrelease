@@ -1,0 +1,25 @@
+azs:
+- name: z1
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - azs: [z1]
+    range: 10.244.0.0/24
+    reserved: [10.244.0.1]
+    static: [10.244.0.2 - 10.244.0.99]
+
+vm_types:
+- name: default
+
+compilation:
+  workers: 1
+  az: z1
+  network: default
+  cloud_properties: {}
+
+disk_types:
+- name: default
+  disk_size: 1024
+
