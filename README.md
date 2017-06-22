@@ -7,12 +7,12 @@ Source files for these are located in src/nginx/
 Manifests are in examples/ and contain the following manifests:
 - vbox-cloud-config.yml
   - example cloud configuration to set up this nginx release in virtualbox
-- vbox-deployment.yml
+- deployment.yml
   - example deployment configuration to use with the vbox cloud configuration
+- deployment-website.yml
+  - an example deployment with a website release included
 - ops-instances.yml
-  - this contains examples to increase the number of instances 
-- ops-multisubnet.yml
-  - this contains example of how to another instancegroup with the same settings in a new subnet (may not be useful, or bosh might handle multi-az/subnet differently
+  - this contains examples to increase the number of instances
 
 # Release information
 The release contains the following:
