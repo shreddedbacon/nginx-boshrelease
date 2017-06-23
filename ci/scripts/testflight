@@ -35,16 +35,16 @@ header "Pulling in any git submodules..."
 git submodule update --init --recursive --force
 
 header "Cleaning up from any previous deployments..."
-bosh -e ${BOSH_TARGET} login --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT}
-bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
+#bosh -e ${BOSH_TARGET} login --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT}
+bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT} || echo "continuing on..."
 
 header "Creating candidate BOSH release..."
 bosh create-release
-bosh -e ${BOSH_TARGET} upload-release --rebase || echo "Continuing..."
+bosh -e ${BOSH_TARGET} upload-release --rebase --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT} || echo "Continuing..."
 
 header "Deploying to BOSH..."
 ./templates/make_manifest warden
-bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml
+bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT}
 
 ## maybe later?
 #if [[ -n ${TEST_ERRAND} ]]; then
@@ -53,8 +53,8 @@ bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml
 #fi
 
 header "Cleaning up..."
-bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
-bosh -e ${BOSH_TARGET} clean-up || echo "continuing on..."
+bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT} || echo "continuing on..."
+bosh -e ${BOSH_TARGET} clean-up --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT} || echo "continuing on..."
 
 echo
 echo "SUCCESS"
