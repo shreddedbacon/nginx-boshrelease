@@ -45,7 +45,7 @@ export BOSH_CLIENT=${BOSH_USERNAME}
 export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
 
 cd ${REPO_ROOT}
-bosh -n create-release --final --tarball=${REPO_ROOT}/releases/${RELEASE_NAME2}/${RELEASE_NAME2}-${VERSION}.tgz --version "${VERSION}"
+bosh -n create-release --final --tarball=releases/${RELEASE_NAME2}/${RELEASE_NAME2}-${VERSION}.tgz --version "${VERSION}"
 cd
 
 mkdir -p ${RELEASE_ROOT}/artifacts
