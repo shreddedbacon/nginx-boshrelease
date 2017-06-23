@@ -43,6 +43,7 @@ bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing
 
 header "Creating candidate BOSH release..."
 bosh -n create-release --force
+header "Uploading BOSH release..."
 bosh -n -e ${BOSH_TARGET} upload-release --rebase || echo "Continuing..."
 
 header "Deploying to BOSH..."
