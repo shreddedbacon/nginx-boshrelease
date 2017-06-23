@@ -39,15 +39,15 @@ header "Cleaning up from any previous deployments..."
 export BOSH_CA_CERT=${BOSH_CA_CERT}
 export BOSH_CLIENT=${BOSH_USERNAME}
 export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
-bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
 
 header "Creating candidate BOSH release..."
-bosh create-release
-bosh -e ${BOSH_TARGET} upload-release --rebase || echo "Continuing..."
+bosh -n create-release
+bosh -n -e ${BOSH_TARGET} upload-release --rebase || echo "Continuing..."
 
 header "Deploying to BOSH..."
 #./templates/make_manifest warden
-bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml
 
 ## maybe later?
 #if [[ -n ${TEST_ERRAND} ]]; then
@@ -56,8 +56,8 @@ bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml
 #fi
 
 header "Cleaning up..."
-bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
-bosh -e ${BOSH_TARGET} clean-up --client=${BOSH_USERNAME} || echo "continuing on..."
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
+bosh -n -e ${BOSH_TARGET} clean-up --client=${BOSH_USERNAME} || echo "continuing on..."
 
 echo
 echo "SUCCESS"
