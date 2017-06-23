@@ -24,10 +24,10 @@ if [[ -z ${VERSION} ]]; then
   exit 2
 fi
 
-#if [[ ! -f ${REPO_ROOT}/ci/release_notes.md ]]; then
-#  echo >&2 "ci/release_notes.md not found.  Did you forget to write them?"
-#  exit 1
-#fi
+if [[ ! -f ${REPO_ROOT}/ci/release_notes.md ]]; then
+  echo >&2 "ci/release_notes.md not found.  Did you forget to write them?"
+  exit 1
+fi
 
 ###############################################################
 
@@ -53,7 +53,7 @@ cd ..
 mkdir -p ${RELEASE_ROOT}/artifacts
 echo "v${VERSION}"                         > ${RELEASE_ROOT}/tag
 echo "${RELEASE_NAME} v${VERSION}"         > ${RELEASE_ROOT}/name
-#mv ${REPO_ROOT}/ci/release_notes.md          ${RELEASE_ROOT}/notes.md
+mv ${REPO_ROOT}/ci/release_notes.md          ${RELEASE_ROOT}/notes.md
 cp ${REPO_ROOT}/releases/${RELEASE_NAME2}/${RELEASE_NAME2}-${VERSION}.tgz  ${RELEASE_ROOT}/artifacts
 
 cat > ${RELEASE_ROOT}/notification <<EOF
