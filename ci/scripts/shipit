@@ -39,12 +39,13 @@ blobstore:
     secret_access_key: ${AWS_SECRET_KEY}
     endpoint: http://10.244.0.22:9001
 EOF
+
 export BOSH_CA_CERT=${BOSH_CA_CERT}
 export BOSH_CLIENT=${BOSH_USERNAME}
 export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
 
 cd ${REPO_ROOT}
-bosh -n create-release --final --tarball=${REPO_ROOT}/releases/${RELEASE_NAME}/${RELEASE_NAME2}-${VERSION}.tgz --version "${VERSION}"
+bosh -n create-release --final --tarball=${REPO_ROOT}/releases/${RELEASE_NAME2}/${RELEASE_NAME2}-${VERSION}.tgz --version "${VERSION}"
 cd
 
 mkdir -p ${RELEASE_ROOT}/artifacts
