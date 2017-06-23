@@ -20,7 +20,7 @@ instance_groups:
   networks:
   - name: default
     static_ips:
-      -10.244.0.50
+      - 10.244.0.50
   jobs:
   - name: nginx
     release: nginx

@@ -4,7 +4,7 @@ Simple bosh release that compiles nginx-1.12.0 stable with pcre-8.40 and zlib-1.
 
 Source files for these are located in src/nginx/
 
-Manifests are in examples/ and contain the following manifests:
+Manifests are in manifests/ and contain the following manifests:
 - vbox-cloud-config.yml
   - example cloud configuration to set up this nginx release in virtualbox
 - deployment.yml
@@ -181,7 +181,7 @@ location ~ \.php$ {
 Deploy a bosh directory into virtualbox, and load the cloud configuration
 ```
 cd <path>/nginx-boshrelease
-bosh -e vbox ucc examples/vbox-cloud-config.yml
+bosh -e vbox ucc manifests/vbox-cloud-config.yml
 ```
 Create the release and upload it into the director
 ```
@@ -194,7 +194,7 @@ sudo route add -net 10.244.0.0/16 gw 192.168.50.6
 ```
 Run the deployment
 ```
-bosh -e vbox -d nginx deploy examples/deployment.yml
+bosh -e vbox -d nginx deploy manifests/deployment.yml
 ```
 Watch as the director creates an nginx instance, you can visit the static page here: http://10.244.0.50
 
@@ -202,7 +202,7 @@ Watch as the director creates an nginx instance, you can visit the static page h
 ### Increase instances in network
 Now that you have a single instance running, lets build up another using an operations file
 ```
-bosh -e vbox -d nginx deploy examples/vbox-deployment.yml -o examples/ops-instances.yml
+bosh -e vbox -d nginx deploy manifests/vbox-deployment.yml -o manifests/ops-instances.yml
 ```
 This will spin up a second instance which is available here: http://10.244.0.51
 
