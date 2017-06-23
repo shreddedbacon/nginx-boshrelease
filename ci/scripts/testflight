@@ -43,7 +43,7 @@ bosh create-release
 bosh -e ${BOSH_TARGET} upload-release --rebase --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT} || echo "Continuing..."
 
 header "Deploying to BOSH..."
-./templates/make_manifest warden
+#./templates/make_manifest warden
 bosh -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT}
 
 ## maybe later?
