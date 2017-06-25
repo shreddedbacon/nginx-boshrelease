@@ -24,3 +24,6 @@ properties:
   nginx_server_name:
     description: domain name(s)
     default: localtest.local
+  nginx_indexes:
+    description: index files
+    default: 'index.html index.htm'

@@ -15,7 +15,7 @@ http {
     access_log /var/vcap/sys/log/nginx/access.log;
     error_log /var/vcap/sys/log/nginx/error.log;
     root <%= p('nginx_docroot') %>;
-    index index.html index.htm;
+    index <%= p('nginx_indexes') %>;
   }
 }
 
