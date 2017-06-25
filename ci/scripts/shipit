@@ -37,6 +37,7 @@ blobstore:
   s3:
     access_key_id: ${AWS_ACCESS_KEY}
     secret_access_key: ${AWS_SECRET_KEY}
+    bucket: ${AWS_BUCKET}
     endpoint: http://10.244.0.22:9001
 EOF
 
