@@ -1,6 +1,7 @@
 ---
 name: nginx
 blobstore:
-  provider: local
+  provider: s3
   options:
-    blobstore_path: /tmp/bosh-nginx
+    endoint: http://http://10.244.0.22:9001
+    bucket_name: nginx
