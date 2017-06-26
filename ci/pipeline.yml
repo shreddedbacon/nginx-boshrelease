@@ -179,9 +179,9 @@ resources:
       uri:         ((github.uri))
       branch:      ((github.branch))
       private_key: ((github.private_key))
-      ignore_paths:
-        - ci/release_notes.md
-        - ci/**
+#      ignore_paths:
+#        - ci/release_notes.md
+#        - ci/**
 
   - name: version
     type: semver

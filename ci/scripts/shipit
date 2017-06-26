@@ -34,11 +34,9 @@ fi
 cat > ${REPO_ROOT}/config/private.yml << EOF
 ---
 blobstore:
-  s3:
+  options:
     access_key_id: ${AWS_ACCESS_KEY}
     secret_access_key: ${AWS_SECRET_KEY}
-    bucket: ${AWS_BUCKET}
-    endpoint: http://10.244.0.22:9001
 EOF
 
 export BOSH_CA_CERT=${BOSH_CA_CERT}
