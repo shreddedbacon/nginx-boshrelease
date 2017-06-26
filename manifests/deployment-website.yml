@@ -34,6 +34,7 @@ properties:
   nginx_worker_connections: 1024
   nginx_server_name: localtest.local
   nginx_docroot: /var/vcap/store/nginx/www/document_root
+  website_docroot: /var/vcap/store/nginx/www/document_root
 
 update:
   canaries: 1
