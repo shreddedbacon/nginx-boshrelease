@@ -1,3 +1,3 @@
 # release
 - testing
-- testing 2
+- testing
