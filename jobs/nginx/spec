@@ -27,3 +27,10 @@ properties:
   nginx_indexes:
     description: index files
     default: 'index.html index.htm'
+  nginx_log_format_name:
+    description: log_format name
+    default: main
+  nginx_log_format:
+    description: log_format used in nginx
+    default: '$remote_addr - $remote_user [$time_local]  $status "$request" $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
+

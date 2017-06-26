@@ -9,6 +9,7 @@ http {
   sendfile        on;
   keepalive_timeout  65;
   server_names_hash_bucket_size 64;
+  log_format <%= p('nginx_log_format_name') %> '<%= p('nginx_log_format') %>';
   server {
     server_name <%= p('nginx_server_name') %>; 
     listen 80;
