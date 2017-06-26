@@ -24,10 +24,10 @@ instance_groups:
     static_ips:
       - 10.244.0.75
   jobs:
-  - name: website
-    release: website
   - name: nginx
     release: nginx
+  - name: website
+    release: website
 
 properties:
   nginx_worker_processes: 1

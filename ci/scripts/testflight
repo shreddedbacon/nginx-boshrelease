@@ -16,6 +16,12 @@ header() {
 	echo
 }
 
+echo "0+dev.1" > /tmp/version
+if [[ -z ${VERSION_FROM} ]]; then
+  VERSION_FROM=/tmp/version
+fi
+VERSION=$(cat ${VERSION_FROM})
+
 ## no need in bosh v2, just use cli to log in
 #header "Setting up ~/.bosh_config..."
 #cat > ~/.bosh_config << EOF

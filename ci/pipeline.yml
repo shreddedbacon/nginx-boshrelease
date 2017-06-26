@@ -17,6 +17,7 @@ jobs:
     - do:
       - aggregate:
         - { get: git, trigger: true }
+        - { get: version }
       - task: testflight
         config:
           platform: linux
@@ -25,10 +26,12 @@ jobs:
             source: {repository: concourse/bosh-cli}
           inputs:
             - { name: git }
+            - { name: version }
           run:
             path: ./git/ci/scripts/testflight
             args: []
           params:
+            VERSION_FROM: version/number
             REPO_ROOT:            git
             BOSH_TARGET:     ((bosh.target))
             BOSH_USERNAME:   ((bosh.username))
