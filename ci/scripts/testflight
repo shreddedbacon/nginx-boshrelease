@@ -48,9 +48,9 @@ export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
 bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
 
 header "Creating candidate BOSH release..."
-bosh -n create-release --force 
+bosh -n create-release --force --version ${VERSION}
 header "Uploading BOSH release..."
-bosh -n -e ${BOSH_TARGET} upload-release --rebase || echo "Continuing..."
+bosh -n -e ${BOSH_TARGET} upload-release || echo "Continuing..."
 
 header "Deploying to BOSH..."
 #./templates/make_manifest warden
