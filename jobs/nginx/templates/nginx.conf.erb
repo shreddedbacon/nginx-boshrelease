@@ -13,7 +13,7 @@ http {
   server {
     server_name <%= p('nginx_server_name') %>; 
     listen 80;
-    access_log /var/vcap/sys/log/nginx/access.log;
+    access_log /var/vcap/sys/log/nginx/access.log <% p('nginx_log_format_name') %>;
     error_log /var/vcap/sys/log/nginx/error.log;
     root <%= p('nginx_docroot') %>;
     index <%= p('nginx_indexes') %>;
