@@ -1,2 +1,0 @@
-# next release
-- updated variables
