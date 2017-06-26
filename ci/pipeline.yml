@@ -1,0 +1,217 @@
+---
+
+groups:
+  - name: '((pipeline.name))'
+    jobs:
+      - testflight
+      - rc
+      - shipit
+      - major
+      - minor
+
+jobs:
+  - name: testflight
+    public: true
+    serial: true
+    plan:
+    - do:
+      - aggregate:
+        - { get: git, trigger: true }
+      - task: testflight
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source: {repository: concourse/bosh-cli}
+          inputs:
+            - { name: git }
+          run:
+            path: ./git/ci/scripts/testflight
+            args: []
+          params:
+            REPO_ROOT:            git
+            BOSH_TARGET:     ((bosh.target))
+            BOSH_USERNAME:   ((bosh.username))
+            BOSH_PASSWORD:   ((bosh.password))
+            BOSH_DEPLOYMENT: ((bosh.deployment))
+            BOSH_CA_CERT: ((bosh.ca_cert))
+#      on_success:
+#        put: notify
+#        params:
+#          channe: ((slack.channel))
+#          text: '((pipeline.name)): testflight success!'
+      on_failure:
+        put: notify
+        params:
+          channel:  ((slack.channel))
+          text:    '((pipeline.name)): testflight failed :('
+
+  - name: rc
+    public: true
+    plan:
+    - do:
+      - aggregate:
+          - { get: git,     trigger: true,  passed: [testflight] }
+          - { get: version, trigger: true, params: {pre: rc} }
+      - put: version
+        params: {file: version/number}
+      on_failure:
+        put: notify
+        params:
+          channel:  ((slack.channel))
+          text:    '((pipeline.name)) : rc job failed '
+
+  - name: minor
+    public: true
+    plan:
+    - do:
+      - { get: version, trigger: false, params: {bump: minor} }
+      - { put: version,                 params: {file: version/number} }
+      on_failure:
+        put: notify
+        params:
+          channel:  ((slack.channel))
+          text:    '((pipeline.name)) : minor job failed'
+
+  - name: major
+    public: true
+    plan:
+    - do:
+      - { get: version, trigger: false, params: {bump: major} }
+      - { put: version,                 params: {file: version/number} }
+      on_failure:
+        put: notify
+        params:
+          channel:  ((slack.channel))
+          text:    '((pipeline.name)) : major job failed'
+
+  - name: shipit
+    public: true
+    serial: true
+    plan:
+    - do:
+      - name: inputs
+        aggregate:
+          - { get: version, passed: [rc], params: {bump: final} }
+          - { get: git,     passed: [rc] }
+      - name: release
+        task: release
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source: {repository: concourse/bosh-cli}
+          inputs:
+            - name: version
+            - name: git
+          outputs:
+            - name: gh
+            - name: pushme
+          run:
+            path: ./git/ci/scripts/shipit
+            args: []
+          params:
+            REPO_ROOT:    git
+            VERSION_FROM: version/number
+            RELEASE_NAME: "((release)) BOSH Release"
+            RELEASE_NAME2: ((release))
+            RELEASE_ROOT: gh
+            REPO_OUT:     pushme
+            BRANCH:       ((github.branch))
+
+            BOSH_TARGET:     ((bosh.target))
+            BOSH_USERNAME:   ((bosh.username))
+            BOSH_PASSWORD:   ((bosh.password))
+            BOSH_DEPLOYMENT: ((bosh.deployment))
+            BOSH_CA_CERT: ((bosh.ca_cert))
+ 
+            AWS_BUCKET: ((aws.bucket))
+            AWS_ACCESS_KEY:       ((aws.access_key))
+            AWS_SECRET_KEY:       ((aws.secret_key))
+
+      - name: upload-git
+        put: git
+        params:
+          rebase: true
+          repository: pushme/git
+      - name: tarball
+        put: s3
+        params:
+          file:  "gh/artifacts/((name))-*.tgz"
+      - name: github-release
+        put: github
+        params:
+          name:   gh/name
+          tag:    gh/tag
+          body:   gh/notes.md
+          globs: [gh/artifacts/*]
+      - name: version-bump
+        put: version
+        params:
+          bump: patch
+      on_success:
+        put: notify
+        params:
+          channel: ((slack.channel))
+          text: '((pipeline.name)): new release'
+      on_failure:
+        put: notify
+        params:
+          channel:  ((slack.channel))
+          text:    '((pipeline.name)): shipit job failed'
+
+
+resource_types:
+  - name: bosh-deployment
+    type: docker-image
+    source:
+      repository: cloudfoundry/bosh-deployment-resource
+
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+
+resources:
+  - name: git
+    type: git
+    source:
+      uri:         ((github.uri))
+      branch:      ((github.branch))
+      private_key: ((github.private_key))
+      ignore_paths:
+        - ci/release_notes.md
+        - ci/**
+
+  - name: version
+    type: semver
+    source :
+      driver:            s3
+      bucket:            ((aws.bucket))
+      key:               version
+      access_key_id:     ((aws.access_key))
+      secret_access_key: ((aws.secret_key))
+      initial_version:   ((initial_version))
+      endpoint: http://10.244.0.22:9001
+
+  - name: notify
+    type: slack-notification
+    source:
+      url: ((slack.webhook))
+
+  - name: github
+    type: github-release
+    source:
+      user:         ((github.owner))
+      repository:   ((github.repo))
+      access_token: ((github.access_token))
+
+  - name: s3
+    type: s3
+    source:
+      bucket:            ((aws.bucket))
+      regexp:            "((name))-(.*).tgz"
+      access_key_id:     ((aws.access_key))
+      secret_access_key: ((aws.secret_key))
+      endpoint: http://10.244.0.22:9001
+
