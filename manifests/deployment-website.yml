@@ -1,5 +1,5 @@
 ---
-name: nginx
+name: nginx-final
 
 releases:
 - name: nginx
@@ -13,7 +13,7 @@ stemcells:
   version: latest
 
 instance_groups:
-- name: nginx
+- name: nginx-final
   instances: 1
   stemcell: default
   vm_type: default
@@ -22,7 +22,7 @@ instance_groups:
   networks:
   - name: default
     static_ips:
-      - 10.244.0.50
+      - 10.244.0.75
   jobs:
   - name: website
     release: website

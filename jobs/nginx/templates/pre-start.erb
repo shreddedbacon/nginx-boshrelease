@@ -1,9 +1,9 @@
 #!/bin/bash -ex
 NGINX_DIR=<%= p('nginx_docroot') %>
-if [[ ! -d "$NGINX_DIR" ]]; then
+if [ ! -d $NGINX_DIR ]; then
   mkdir -p $NGINX_DIR
   chown -R vcap:vcap $NGINX_DIR
   cd $NGINX_DIR
-  echo "It works" > index.html
+  echo "" > index.html
 fi
 
