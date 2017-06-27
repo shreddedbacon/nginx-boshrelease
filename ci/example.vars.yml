@@ -1,0 +1,34 @@
+---
+
+name: 'nginx'
+release: 'nginx'
+initial_version: 1.0.0
+pipeline:
+  name: 'nginx-boshrelease'
+slack:
+  channel: ## SLACK CHANNEL
+  webhook: ## SLACK WEBHOOK
+aws:
+  access_key: 'minio'
+  secret_key: 'minio123'
+  bucket: 'nginx'
+  endpoint: 'http://10.244.0.22:9001'
+#  endpoint: ''
+github:
+  uri: 'git@github.com:oaktondigital/nginx-boshrelease.git'
+  repo: 'nginx-boshrelease'
+  owner: 'oaktondigital'
+  access_token: ### GITHUB ACCESS TOKEN
+  branch: 'master'
+  private_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    -----END RSA PRIVATE KEY-----
+
+bosh:
+  deployment: 'nginx'
+  target: http://192.168.50.6:25555
+  username: 'admin'
+  password: '9f4uus9swgz97xm90jbg'
+  ca_cert: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----

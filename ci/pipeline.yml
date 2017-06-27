@@ -195,7 +195,7 @@ resources:
       access_key_id:     ((aws.access_key))
       secret_access_key: ((aws.secret_key))
       initial_version:   ((initial_version))
-      endpoint: http://10.244.0.22:9001
+      endpoint: ((aws.endpoint))
 
   - name: notify
     type: slack-notification
@@ -216,5 +216,5 @@ resources:
       regexp:            "((name))-(.*).tgz"
       access_key_id:     ((aws.access_key))
       secret_access_key: ((aws.secret_key))
-      endpoint: http://10.244.0.22:9001
+      endpoint: ((aws.endpoint))
 
