@@ -4,5 +4,6 @@ blobstore:
   provider: s3
   options:
     bucket: oaktonnginx
+    region: 'ap-southeast-2'
     #    endoint: http://10.244.0.22:9001
     #    bucket_name: nginx
