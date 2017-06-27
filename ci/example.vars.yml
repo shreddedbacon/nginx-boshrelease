@@ -25,7 +25,6 @@ github:
     -----END RSA PRIVATE KEY-----
 
 bosh:
-  iaas: 'aws'
   deployment: 'nginx'
   target: http://192.168.50.6:25555
   username: 'admin'
