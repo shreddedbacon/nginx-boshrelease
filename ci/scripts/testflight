@@ -22,21 +22,8 @@ if [[ -z ${VERSION_FROM} ]]; then
 fi
 VERSION=$(cat ${VERSION_FROM})
 
-## no need in bosh v2, just use cli to log in
-#header "Setting up ~/.bosh_config..."
-#cat > ~/.bosh_config << EOF
-#---
-#aliases:
-#  target:
-#    bosh-lite: ${BOSH_LITE_TARGET}
-#auth:
-#  ${BOSH_LITE_TARGET}:
-#    username: ${BOSH_LITE_USERNAME}
-#    password: ${BOSH_LITE_PASSWORD}
-#EOF
-
 set -e
-cd ${REPO_ROOT}
+cd git
 header "Pulling in any git submodules..."
 git submodule update --init --recursive --force
 
@@ -54,7 +41,18 @@ bosh -n -e ${BOSH_TARGET} upload-release || echo "Continuing..."
 
 header "Deploying to BOSH..."
 #./templates/make_manifest warden
-bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml
+# Allow use of operations file(s)?
+OPS=''
+if [ -d ../ops_files ]
+then
+  OPS_LOCATION=ops_files/manifests/${BOSH_DEPLOYMENT}
+  for OP in $(ls ../${OPS_LOCATION}/*-${IAAS}-ops.yml)
+  do
+    OPS="${OPS} -o ../${OPS_LOCATION}/$OP"
+  done
+fi
+echo $OPS
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml ##${OPS}
 
 ## maybe later?
 #if [[ -n ${TEST_ERRAND} ]]; then

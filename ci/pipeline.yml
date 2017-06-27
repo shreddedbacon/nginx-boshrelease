@@ -16,6 +16,7 @@ jobs:
     plan:
     - do:
       - aggregate:
+        - { get: ops_files }
         - { get: git, trigger: true }
         - { get: version }
       - task: testflight
@@ -32,7 +33,7 @@ jobs:
             args: []
           params:
             VERSION_FROM: version/number
-            REPO_ROOT:            git
+            IAAS: ((bosh.iaas))
             BOSH_TARGET:     ((bosh.target))
             BOSH_USERNAME:   ((bosh.username))
             BOSH_PASSWORD:   ((bosh.password))
@@ -114,12 +115,9 @@ jobs:
             path: ./git/ci/scripts/shipit
             args: []
           params:
-            REPO_ROOT:    git
             VERSION_FROM: version/number
             RELEASE_NAME: "((release)) BOSH Release"
             RELEASE_NAME2: ((release))
-            RELEASE_ROOT: gh
-            REPO_OUT:     pushme
             BRANCH:       ((github.branch))
 
             BOSH_TARGET:     ((bosh.target))
@@ -218,3 +216,9 @@ resources:
       secret_access_key: ((aws.secret_key))
       endpoint: ((aws.endpoint))
 
+  - name: ops_files
+    type: git
+    source:
+      uri:         ((ops_files.uri))
+      branch:      ((ops_files.branch))
+      private_key: ((ops_files.private_key))

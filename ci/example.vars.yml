@@ -25,6 +25,7 @@ github:
     -----END RSA PRIVATE KEY-----
 
 bosh:
+  iaas: 'aws'
   deployment: 'nginx'
   target: http://192.168.50.6:25555
   username: 'admin'
@@ -32,3 +33,10 @@ bosh:
   ca_cert: |
     -----BEGIN CERTIFICATE-----
     -----END CERTIFICATE-----
+
+ops_files:
+  uri: 'git@github.com:oaktondigital/demo-resources.git'
+  branch: 'master'
+  private_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    -----END RSA PRIVATE KEY-----
