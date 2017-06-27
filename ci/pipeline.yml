@@ -152,16 +152,16 @@ jobs:
         put: version
         params:
           bump: patch
-      on_success:
-        put: notify
-        params:
-          channel: ((slack.channel))
-          text: '((pipeline.name)): new release'
-      on_failure:
-        put: notify
-        params:
-          channel:  ((slack.channel))
-          text:    '((pipeline.name)): shipit job failed'
+#      on_success:
+#        put: notify
+#        params:
+#          channel: ((slack.channel))
+#          text: '((pipeline.name)): new release'
+#      on_failure:
+#        put: notify
+#        params:
+#          channel:  ((slack.channel))
+#          text:    '((pipeline.name)): shipit job failed'
 
 
 resource_types:
