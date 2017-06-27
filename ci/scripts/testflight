@@ -46,6 +46,7 @@ OPS=''
 if [ -d ../ops_files ]
 then
   OPS_LOCATION=ops_files/manifests/${BOSH_DEPLOYMENT}
+  ls ${OPS_LOCATION}
   for OP in $(ls ../${OPS_LOCATION}/*-${IAAS}-ops.yml)
   do
     OPS="${OPS} -o ../${OPS_LOCATION}/$OP"

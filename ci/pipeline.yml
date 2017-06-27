@@ -44,11 +44,11 @@ jobs:
 #        params:
 #          channe: ((slack.channel))
 #          text: '((pipeline.name)): testflight success!'
-      on_failure:
-        put: notify
-        params:
-          channel:  ((slack.channel))
-          text:    '((pipeline.name)): testflight failed :('
+#      on_failure:
+#        put: notify
+#        params:
+#          channel:  ((slack.channel))
+#          text:    '((pipeline.name)): testflight failed :('
 
   - name: rc
     public: true
