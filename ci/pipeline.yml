@@ -28,6 +28,7 @@ jobs:
           inputs:
             - { name: git }
             - { name: version }
+            - { name: ops_files }
           run:
             path: ./git/ci/scripts/testflight
             args: []
