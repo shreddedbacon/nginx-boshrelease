@@ -34,9 +34,9 @@ bosh:
     -----BEGIN CERTIFICATE-----
     -----END CERTIFICATE-----
 
-ops_files:
-  uri: 'git@github.com:oaktondigital/demo-resources.git'
-  branch: 'master'
-  private_key: |
-    -----BEGIN RSA PRIVATE KEY-----
-    -----END RSA PRIVATE KEY-----
+#ops_files:
+#  uri: 'git@github.com:oaktondigital/demo-resources.git'
+#  branch: 'master'
+#  private_key: |
+#    -----BEGIN RSA PRIVATE KEY-----
+#    -----END RSA PRIVATE KEY-----

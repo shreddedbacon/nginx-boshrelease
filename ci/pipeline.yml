@@ -16,7 +16,7 @@ jobs:
     plan:
     - do:
       - aggregate:
-        - { get: ops_files }
+        #- { get: ops_files }
         - { get: git, trigger: true }
         - { get: version }
       - task: testflight
@@ -28,7 +28,7 @@ jobs:
           inputs:
             - { name: git }
             - { name: version }
-            - { name: ops_files }
+            #- { name: ops_files }
           run:
             path: ./git/ci/scripts/testflight
             args: []
@@ -217,9 +217,9 @@ resources:
       secret_access_key: ((aws.secret_key))
       endpoint: ((aws.endpoint))
 
-  - name: ops_files
-    type: git
-    source:
-      uri:         ((ops_files.uri))
-      branch:      ((ops_files.branch))
-      private_key: ((ops_files.private_key))
+#  - name: ops_files
+#    type: git
+#    source:
+#      uri:         ((ops_files.uri))
+#      branch:      ((ops_files.branch))
+#      private_key: ((ops_files.private_key))
