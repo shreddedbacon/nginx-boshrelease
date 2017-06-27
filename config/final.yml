@@ -3,5 +3,6 @@ name: nginx
 blobstore:
   provider: s3
   options:
-    endoint: http://10.244.0.22:9001
-    bucket_name: nginx
+    bucket: oaktonnginx
+    #    endoint: http://10.244.0.22:9001
+    #    bucket_name: nginx
