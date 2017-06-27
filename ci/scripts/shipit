@@ -24,10 +24,10 @@ if [[ -z ${VERSION} ]]; then
   exit 2
 fi
 
-if [[ ! -f git/ci/release_notes.md ]]; then
-  echo >&2 "ci/release_notes.md not found.  Did you forget to write them?"
-  exit 1
-fi
+#if [[ ! -f git/ci/release_notes.md ]]; then
+#  echo >&2 "ci/release_notes.md not found.  Did you forget to write them?"
+#  exit 1
+#fi
 
 ###############################################################
 
@@ -51,7 +51,8 @@ export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
 mkdir -p gh/artifacts
 echo "v${VERSION}"                         > gh/tag
 echo "${RELEASE_NAME} v${VERSION}"         > gh/name
-mv git/ci/release_notes.md          gh/notes.md
+#mv git/ci/release_notes.md          gh/notes.md
+echo "Release ${RELEASE_NAME} v${VERSION}" > gh/notes.md
 cp git/releases/${RELEASE_NAME2}/${RELEASE_NAME2}-${VERSION}.tgz  gh/artifacts
 
 cat > gh/notification <<EOF
