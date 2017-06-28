@@ -39,6 +39,7 @@ jobs:
             BOSH_PASSWORD:   ((bosh.password))
             BOSH_DEPLOYMENT: ((bosh.deployment))
             BOSH_CA_CERT: ((bosh.ca_cert))
+#            TEST_ERRAND: ((bosh.test-errand))
 #      on_success:
 #        put: notify
 #        params:
