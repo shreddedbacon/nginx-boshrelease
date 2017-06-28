@@ -22,15 +22,6 @@ if [[ -z ${VERSION_FROM} ]]; then
 fi
 VERSION=$(cat ${VERSION_FROM})
 
-cat > git/config/private.yml << EOF
----
-blobstore:
-  options:
-    access_key_id: ${AWS_ACCESS_KEY}
-    secret_access_key: ${AWS_SECRET_KEY}
-EOF
-
-
 set -e
 cd git
 header "Pulling in any git submodules..."
