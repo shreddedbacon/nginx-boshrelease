@@ -142,7 +142,7 @@ jobs:
         params:
           file:  "gh/artifacts/((name))-*.tgz"
       - name: github-release
-        put: github
+        put: github-release
         params:
           name:   gh/name
           tag:    gh/tag
@@ -203,7 +203,7 @@ resources:
     source:
       url: ((slack.webhook))
 
-  - name: github
+  - name: github-release
     type: github-release
     source:
       user:         ((github.owner))
