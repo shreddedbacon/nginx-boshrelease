@@ -19,6 +19,7 @@ jobs:
         #- { get: ops_files }
         - { get: git, trigger: true }
         - { get: version }
+        - { get: bosh-stemcell }
       - task: testflight
         config:
           platform: linux
@@ -218,6 +219,11 @@ resources:
       secret_access_key: ((aws.secret_key))
       region_name: ((aws.region))
       endpoint: ((aws.endpoint))
+
+  - name: bosh-stemcell
+    type: bosh-io-stemcell
+    source:
+      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
 
 #  - name: ops_files
 #    type: git
