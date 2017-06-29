@@ -138,7 +138,7 @@ jobs:
           rebase: true
           repository: pushme/git
       - name: tarball
-        put: s3
+        put: blobstore
         params:
           file:  "gh/artifacts/((name))-*.tgz"
       - name: github-release
@@ -210,7 +210,7 @@ resources:
       repository:   ((github.repo))
       access_token: ((github.access_token))
 
-  - name: s3
+  - name: blobstore
     type: s3
     source:
       bucket:            ((aws.bucket))
