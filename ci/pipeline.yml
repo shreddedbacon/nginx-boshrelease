@@ -17,9 +17,12 @@ jobs:
     - do:
       - aggregate:
         #- { get: ops_files }
-        - { get: bosh-release, trigger: true }
-        - { get: version }
-        - { get: bosh-stemcell, trigger: true }
+        - get: bosh-release
+          trigger: true
+        - get: version
+        - get: bosh-stemcell
+          trigger: true
+          version: {version: '3421.9'}
       - task: test-release
         config:
           platform: linux
