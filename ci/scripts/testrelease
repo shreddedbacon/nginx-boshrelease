@@ -50,7 +50,7 @@ bosh -n -e ${BOSH_TARGET} upload-release || echo "Continuing..."
 
 
 header "Deploying to BOSH..."
-bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml -o ../stemcell-version.yml -v
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml -o ../stemcell-version.yml
 
 #if [[ -n ${TEST_ERRAND} ]]; then
 #  header "Running '${TEST_ERRAND}' validation errand"
