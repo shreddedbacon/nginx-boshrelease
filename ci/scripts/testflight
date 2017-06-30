@@ -22,6 +22,8 @@ if [[ -z ${VERSION_FROM} ]]; then
 fi
 VERSION=$(cat ${VERSION_FROM})
 
+ls bosh-stemcell
+
 set -e
 cd git
 header "Pulling in any git submodules..."

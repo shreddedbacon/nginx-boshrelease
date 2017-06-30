@@ -19,7 +19,7 @@ jobs:
         #- { get: ops_files }
         - { get: git, trigger: true }
         - { get: version }
-        - { get: bosh-stemcell }
+        - { get: bosh-stemcell, trigger: true }
       - task: testflight
         config:
           platform: linux
@@ -29,6 +29,7 @@ jobs:
           inputs:
             - { name: git }
             - { name: version }
+            - { name: bosh-stemcell }
             #- { name: ops_files }
           run:
             path: ./git/ci/scripts/testflight
