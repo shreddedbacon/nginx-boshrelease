@@ -17,22 +17,22 @@ jobs:
     - do:
       - aggregate:
         #- { get: ops_files }
-        - { get: git, trigger: true }
+        - { get: bosh-release, trigger: true }
         - { get: version }
         - { get: bosh-stemcell, trigger: true }
-      - task: testflight
+      - task: test-release
         config:
           platform: linux
           image_resource:
             type: docker-image
             source: {repository: concourse/bosh-cli}
           inputs:
-            - { name: git }
+            - { name: bosh-release }
             - { name: version }
             - { name: bosh-stemcell }
             #- { name: ops_files }
           run:
-            path: ./git/ci/scripts/testrelease
+            path: ./bosh-release/ci/scripts/testrelease
             args: []
           params:
             VERSION_FROM: version/number
@@ -58,7 +58,7 @@ jobs:
     plan:
     - do:
       - aggregate:
-          - { get: git,     trigger: true,  passed: [testflight] }
+          - { get: bosh-release,     trigger: true,  passed: [test-release] }
           - { get: version, trigger: true, params: {pre: rc} }
       - put: version
         params: {file: version/number}
@@ -100,7 +100,7 @@ jobs:
       - name: inputs
         aggregate:
           - { get: version, passed: [rc], params: {bump: final} }
-          - { get: git,     passed: [rc] }
+          - { get: bosh-release,     passed: [rc] }
       - name: release
         task: release
         config:
@@ -110,12 +110,12 @@ jobs:
             source: {repository: concourse/bosh-cli}
           inputs:
             - name: version
-            - name: git
+            - name: bosh-release
           outputs:
             - name: gh
             - name: pushme
           run:
-            path: ./git/ci/scripts/cutrelease
+            path: ./bosh-release/ci/scripts/cutrelease
             args: []
           params:
             VERSION_FROM: version/number
@@ -134,7 +134,7 @@ jobs:
             AWS_SECRET_KEY:       ((aws.secret_key))
 
       - name: upload-git
-        put: git
+        put: bosh-release
         params:
           rebase: true
           repository: pushme/git
@@ -177,7 +177,7 @@ resource_types:
       repository: cfcommunity/slack-notification-resource
 
 resources:
-  - name: git
+  - name: bosh-release
     type: git
     source:
       uri:         ((github.uri))
