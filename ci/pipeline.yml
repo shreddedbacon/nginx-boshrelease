@@ -4,10 +4,10 @@ groups:
   - name: '((pipeline.name))'
     jobs:
       - test-release
-      - rc
-      - cut-release
-      - major
-      - minor
+      - bump-rc
+      - promote-release
+      - bump-major
+      - bump-minor
 
 jobs:
   - name: test-release
@@ -53,7 +53,7 @@ jobs:
 #          channel:  ((slack.channel))
 #          text:    '((pipeline.name)): testflight failed :('
 
-  - name: rc
+  - name: bump-rc
     public: true
     plan:
     - do:
@@ -68,7 +68,7 @@ jobs:
           channel:  ((slack.channel))
           text:    '((pipeline.name)) : rc job failed '
 
-  - name: minor
+  - name: bump-minor
     public: true
     plan:
     - do:
@@ -80,7 +80,7 @@ jobs:
           channel:  ((slack.channel))
           text:    '((pipeline.name)) : minor job failed'
 
-  - name: major
+  - name: bump-major
     public: true
     plan:
     - do:
@@ -92,15 +92,15 @@ jobs:
           channel:  ((slack.channel))
           text:    '((pipeline.name)) : major job failed'
 
-  - name: cut-release
+  - name: promote-release
     public: true
     serial: true
     plan:
     - do:
       - name: inputs
         aggregate:
-          - { get: version, passed: [rc], params: {bump: final} }
-          - { get: bosh-release,     passed: [rc] }
+          - { get: version, passed: [bump-rc], params: {bump: final} }
+          - { get: bosh-release,     passed: [bump-rc] }
       - name: release
         task: release
         config:
