@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# ci/scripts/create-release-and-deploy
+#
+# Script for generating Github release / tag assets
+# and managing release notes for a BOSH Release pipeline
+#
+# author:  James Hunt <james@niftylogic.com>
+# created: 2016-03-30
+
+header() {
+	echo
+	echo "###############################################"
+	echo
+	echo $*
+	echo
+}
+
+echo "0+dev.1" > /tmp/version
+if [[ -z ${VERSION_FROM} ]]; then
+  VERSION_FROM=/tmp/version
+fi
+VERSION=$(cat ${VERSION_FROM})
+
+cat bosh-stemcell/version
+
+set -e
+cd git
+header "Pulling in any git submodules..."
+git submodule update --init --recursive --force
+
+header "Cleaning up from any previous deployments..."
+#bosh -e ${BOSH_TARGET} login --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT}
+export BOSH_CA_CERT=${BOSH_CA_CERT}
+export BOSH_CLIENT=${BOSH_USERNAME}
+export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
+
+header "Creating candidate BOSH release..."
+bosh -n create-release --force --version ${VERSION}
+header "Uploading BOSH release..."
+bosh -n -e ${BOSH_TARGET} upload-release || echo "Continuing..."
+
+header "Deploying to BOSH..."
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml
+
+#if [[ -n ${TEST_ERRAND} ]]; then
+#  header "Running '${TEST_ERRAND}' validation errand"
+#  bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} run errand ${TEST_ERRAND}
+#fi
+
+header "Cleaning up..."
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
+bosh -n -e ${BOSH_TARGET} clean-up --client=${BOSH_USERNAME} || echo "continuing on..."
+
+echo
+echo "SUCCESS"
+exit 0
+
