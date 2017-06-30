@@ -3,14 +3,14 @@
 groups:
   - name: '((pipeline.name))'
     jobs:
-      - testflight
+      - test-release
       - rc
-      - shipit
+      - cut-release
       - major
       - minor
 
 jobs:
-  - name: testflight
+  - name: test-release
     public: true
     serial: true
     plan:
@@ -32,7 +32,7 @@ jobs:
             - { name: bosh-stemcell }
             #- { name: ops_files }
           run:
-            path: ./git/ci/scripts/testflight
+            path: ./git/ci/scripts/testrelease
             args: []
           params:
             VERSION_FROM: version/number
@@ -92,7 +92,7 @@ jobs:
           channel:  ((slack.channel))
           text:    '((pipeline.name)) : major job failed'
 
-  - name: shipit
+  - name: cut-release
     public: true
     serial: true
     plan:
@@ -115,7 +115,7 @@ jobs:
             - name: gh
             - name: pushme
           run:
-            path: ./git/ci/scripts/shipit
+            path: ./git/ci/scripts/cutrelease
             args: []
           params:
             VERSION_FROM: version/number
