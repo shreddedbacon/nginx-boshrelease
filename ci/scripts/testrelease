@@ -22,7 +22,14 @@ if [[ -z ${VERSION_FROM} ]]; then
 fi
 VERSION=$(cat ${VERSION_FROM})
 
-cat bosh-stemcell/version
+
+header "Create operations file to specify stemcell version to use from the stemcell resource"
+cat > ./stemcell-version.yml << EOF
+---
+- type: replace
+  path: /stemcells/alias=default/version
+  value: $(cat bosh-stemcell/version)
+EOF
 
 set -e
 cd bosh-release
@@ -41,8 +48,9 @@ bosh -n create-release --force --version ${VERSION}
 header "Uploading BOSH release..."
 bosh -n -e ${BOSH_TARGET} upload-release || echo "Continuing..."
 
+
 header "Deploying to BOSH..."
-bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml -o ../stemcell-version.yml -v
 
 #if [[ -n ${TEST_ERRAND} ]]; then
 #  header "Running '${TEST_ERRAND}' validation errand"
