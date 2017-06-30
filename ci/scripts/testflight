@@ -22,7 +22,7 @@ if [[ -z ${VERSION_FROM} ]]; then
 fi
 VERSION=$(cat ${VERSION_FROM})
 
-ls bosh-stemcell
+cat bosh-stemcell/version
 
 set -e
 cd git
