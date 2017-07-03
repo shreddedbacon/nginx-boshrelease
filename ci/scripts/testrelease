@@ -22,6 +22,11 @@ if [[ -z ${VERSION_FROM} ]]; then
 fi
 VERSION=$(cat ${VERSION_FROM})
 
+# Do this earlier
+export BOSH_CA_CERT=${BOSH_CA_CERT}
+export BOSH_CLIENT=${BOSH_USERNAME}
+export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
+
 
 header "Create operations file to specify stemcell version to use from the stemcell resource"
 cat > ./stemcell-version.yml << EOF
@@ -40,10 +45,6 @@ header "Pulling in any git submodules..."
 git submodule update --init --recursive --force
 
 header "Cleaning up from any previous deployments..."
-#bosh -e ${BOSH_TARGET} login --client=${BOSH_USERNAME} --client-secret=${BOSH_PASSWORD} --ca-cert=${BOSH_CA_CERT}
-export BOSH_CA_CERT=${BOSH_CA_CERT}
-export BOSH_CLIENT=${BOSH_USERNAME}
-export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
 bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} deld --force || echo "continuing on..."
 
 header "Creating candidate BOSH release..."
