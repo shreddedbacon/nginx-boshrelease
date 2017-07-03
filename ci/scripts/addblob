@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -eu -o pipefail
+
+cat > bosh-release/config/private.yml << EOF
+---
+blobstore:
+  options:
+    access_key_id: ${AWS_ACCESS_KEY}
+    secret_access_key: ${AWS_SECRET_KEY}
+EOF
+
+cd bosh-release
+
+OLD_FILE=$(egrep -o "${BLOB_NAME}-(.*).${BLOB_EXTENSION}" packages/${PACKAGE_NAME}/spec)
+NEW_FILE=${BLOB_NAME}-$(cat ../github-release/version).${BLOB_EXTENSION}
+
+bosh add-blob ../github-release/*.tar.gz ${PACKAGE_NAME}/${NEW_FILE}
+bosh upload-blobs
+
+sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/spec
+sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/packaging
+
+git config --global user.name "CICD Robot"
+git config --global user.email "cicd@oakton.digital"
+
+git commit -am 'bump release blob'
+
+cd ..
+cp -a bosh-release pushgit
+
+echo "finished uploading a new source blob"
+exit 0
