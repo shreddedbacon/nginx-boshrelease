@@ -32,7 +32,9 @@ cat > ./stemcell-version.yml << EOF
 EOF
 
 set -e
-ls bosh-stemcell
+header "Upload stemcell"
+bosh -n -e ${BOSH_TARGET} upload-stemcell bosh-stemcell/stemcell.tgz
+
 cd bosh-release
 header "Pulling in any git submodules..."
 git submodule update --init --recursive --force
