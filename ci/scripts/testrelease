@@ -32,6 +32,7 @@ cat > ./stemcell-version.yml << EOF
 EOF
 
 set -e
+ls bosh-stemcell
 cd bosh-release
 header "Pulling in any git submodules..."
 git submodule update --init --recursive --force
