@@ -140,7 +140,7 @@ jobs:
         put: bosh-release
         params:
           rebase: true
-          repository: pushme/git
+          repository: pushme/bosh-release
       - name: tarball
         put: blobstore
         params:
