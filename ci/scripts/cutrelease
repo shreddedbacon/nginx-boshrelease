@@ -61,18 +61,14 @@ EOF
 
 
 # GIT!
-#if [[ -z $(git config --global user.email) ]]; then
-#  git config --global user.email "ben.jackson@oakton.com.au"
-#fi
-#if [[ -z $(git config --global user.name) ]]; then
-#  git config --global user.name "Ben Jackson"
-#fi
-#
-#(cd bosh-release
-# git merge --no-edit ${BRANCH}
-# git add -A
-# git status
-# git commit -m "release v${VERSION}")
+git config --global user.name "CICD Robot"
+git config --global user.email "cicd@oakton.digital"
+
+(cd bosh-release
+ git merge --no-edit ${BRANCH}
+ git add -A
+ git status
+ git commit -m "release v${VERSION}")
 
 # so that future steps in the pipeline can push our changes
 cp -a bosh-release pushme
