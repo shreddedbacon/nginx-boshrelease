@@ -16,13 +16,11 @@ jobs:
     plan:
     - do:
       - aggregate:
-        #- { get: ops_files }
         - get: bosh-release
           trigger: true
         - get: version
         - get: bosh-stemcell
           trigger: true
-          version: {version: '3421.9'}
       - task: test-release
         config:
           platform: linux
@@ -33,7 +31,6 @@ jobs:
             - { name: bosh-release }
             - { name: version }
             - { name: bosh-stemcell }
-            #- { name: ops_files }
           run:
             path: ./bosh-release/ci/scripts/testrelease
             args: []
@@ -125,13 +122,11 @@ jobs:
             RELEASE_NAME: "((release)) BOSH Release"
             RELEASE_NAME2: ((release))
             BRANCH:       ((github.branch))
-
             BOSH_TARGET:     ((bosh.target))
             BOSH_USERNAME:   ((bosh.username))
             BOSH_PASSWORD:   ((bosh.password))
             BOSH_DEPLOYMENT: ((bosh.deployment))
             BOSH_CA_CERT: ((bosh.ca_cert))
- 
             AWS_BUCKET: ((aws.bucket))
             AWS_ACCESS_KEY:       ((aws.access_key))
             AWS_SECRET_KEY:       ((aws.secret_key))
@@ -186,9 +181,6 @@ resources:
       uri:         ((github.uri))
       branch:      ((github.branch))
       private_key: ((github.private_key))
-#      ignore_paths:
-#        - ci/release_notes.md
-#        - ci/**
 
   - name: version
     type: semver
@@ -229,9 +221,3 @@ resources:
     source:
       name: bosh-warden-boshlite-ubuntu-trusty-go_agent
 
-#  - name: ops_files
-#    type: git
-#    source:
-#      uri:         ((ops_files.uri))
-#      branch:      ((ops_files.branch))
-#      private_key: ((ops_files.private_key))
