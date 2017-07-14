@@ -31,7 +31,6 @@ properties:
   nginx_servers:
   - |
     server {
-      # <%= p('nginx_worker_connections') %>
       server_name localtest.local;
       listen 80;
       access_log /var/vcap/sys/log/nginx/access.log main;
