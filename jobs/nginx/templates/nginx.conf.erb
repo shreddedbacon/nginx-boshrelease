@@ -10,6 +10,9 @@ http {
   keepalive_timeout  65;
   server_names_hash_bucket_size 64;
   log_format <%= p('nginx_log_format_name') %> '<%= p('nginx_log_format') %>';
+  <% for server in p('nginx_servers') %>
+  <%= "#{server}" %>
+  <% end %>
   server {
     server_name <%= p('nginx_server_name') %>; 
     listen 80;
