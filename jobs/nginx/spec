@@ -46,14 +46,3 @@ properties:
             try_files $uri $uri/ =404;
           }
         }
-      - |
-        server {
-          server_name bob;
-          listen 80;
-          root /var/vcap/store/nginx/www/document_root;
-          index index.html;
-          location / {
-            try_files $uri $uri/ =404;
-          }
-        }
-
