@@ -10,30 +10,11 @@ http {
   keepalive_timeout  65;
   server_names_hash_bucket_size 64;
   log_format <%= p('nginx_log_format_name') %> '<%= p('nginx_log_format') %>';
+
+# server blocks start here
 <% for server in p('nginx_servers') %>
 <%= "#{server}" %>
 <% end %>
-  server {
-    server_name <%= p('nginx_server_name') %>; 
-    listen 80;
-    access_log /var/vcap/sys/log/nginx/access.log <% p('nginx_log_format_name') %>;
-    error_log /var/vcap/sys/log/nginx/error.log;
-    root <%= p('nginx_docroot') %>;
-    index <%= p('nginx_indexes') %>;
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-
-    location ~ \.php$ {
-        try_files $uri =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-  }
+# server blocks end here
 }
 

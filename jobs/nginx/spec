@@ -18,15 +18,6 @@ properties:
   nginx_worker_connections:
     description: Nginx worker connections
     default: 1024
-  nginx_docroot:
-    description: Nginx docroot
-    default: /var/vcap/store/nginx/www/document_root
-  nginx_server_name:
-    description: domain name(s)
-    default: localtest.local
-  nginx_indexes:
-    description: index files
-    default: 'index.html index.htm'
   nginx_log_format_name:
     description: log_format name
     default: main
@@ -38,11 +29,22 @@ properties:
     default:
       - |
         server {
-          server_name bob;
+          server_name localtest.local;
           listen 80;
+          access_log /var/vcap/sys/log/nginx/access.log main;
+          error_log /var/vcap/sys/log/nginx/error.log;
           root /var/vcap/store/nginx/www/document_root;
-          index index.html;
+          index index.php index.html index.html;
           location / {
-            try_files $uri $uri/ =404;
+              try_files $uri $uri/ =404;
+          }
+          location ~ \.php$ {
+              try_files $uri =404;
+              fastcgi_split_path_info ^(.+\.php)(/.+)$;
+              fastcgi_pass 127.0.0.1:9000;
+              fastcgi_index index.php;
+              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+              include fastcgi_params;
           }
         }
+
