@@ -1,8 +1,11 @@
 #!/bin/bash -ex
-NGINX_DIR=<%= p('nginx_docroot') %>
-if [ ! -d $NGINX_DIR ]; then
-  mkdir -p $NGINX_DIR
-  echo "" > ${NGINX_DIR}/index.html
-  chown -R vcap:vcap $NGINX_DIR
-fi
-
+DOCROOTS=$(cat /var/vcap/jobs/nginx/etc/nginx.conf | grep "root /" | awk '{print $2}' | rev | cut -c 2- | rev)
+for docroot in ${DOCROOTS}
+do
+  NGINX_DIR=${docroot}
+  if [ ! -d $NGINX_DIR ]; then
+    mkdir -p $NGINX_DIR
+    echo "" > ${NGINX_DIR}/index.html
+    chown -R vcap:vcap $NGINX_DIR
+  fi
+done
