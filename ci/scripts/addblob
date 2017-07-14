@@ -2,6 +2,7 @@
 
 set -eu -o pipefail
 
+# Create the private.yml file for uploading the blob
 cat > bosh-release/config/private.yml << EOF
 ---
 blobstore:
@@ -10,24 +11,38 @@ blobstore:
     secret_access_key: ${AWS_SECRET_KEY}
 EOF
 
-cd bosh-release
+# Go into the directory for the release
+pushd bosh-release
+  # Determine old blob name, and new blob name
+  OLD_FILE=$(egrep -o "${BLOB_NAME}-(.*).${BLOB_EXTENSION}" packages/${PACKAGE_NAME}/spec)
+  NEW_FILE=${BLOB_NAME}-$(cat ../github-release/version).${BLOB_EXTENSION}
 
-OLD_FILE=$(egrep -o "${BLOB_NAME}-(.*).${BLOB_EXTENSION}" packages/${PACKAGE_NAME}/spec)
-NEW_FILE=${BLOB_NAME}-$(cat ../github-release/version).${BLOB_EXTENSION}
+  # Add the new blob to blobs.yml
+  bosh add-blob ../github-release/*.tar.gz ${PACKAGE_NAME}/${NEW_FILE}
+  # Remove old file blob from blobs.yml, the old file is no longer required for development purposes and final release tarballs contain the source files external to blobs.yml
+  bosh remove-blob ${PACKAGE_NAME}/${OLD_FILE}
+  # Upload the newly added blobs
+  bosh upload-blobs
 
-bosh add-blob ../github-release/*.tar.gz ${PACKAGE_NAME}/${NEW_FILE}
-bosh upload-blobs
+  # Find and replace any references to the package
+  # Need to work this to check for anything that does popd or cd into directories from the extracted source files
+  # Not all things are created the same or extract the same
+  # Maybe let the test-release fail and require manual intervention to update spec and packaging scripts
+  sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/spec
+  sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/packaging
 
-sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/spec
-sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/packaging
+  # Do GIT stuff
+  git config --global user.name "CICD Robot"
+  git config --global user.email "cicd@oakton.digital"
 
-git config --global user.name "CICD Robot"
-git config --global user.email "cicd@oakton.digital"
+  git commit -am 'bump release blob'
 
-git commit -am 'bump release blob'
+  # Get out of the directory
+popd
 
-cd ..
+# Copy the release to push the changes into git
 cp -a bosh-release pushgit
 
+# Exit
 echo "finished uploading a new source blob"
 exit 0
