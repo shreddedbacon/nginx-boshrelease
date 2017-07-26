@@ -20,13 +20,13 @@ properties:
     default: 1024
   nginx_sendfile:
     description: Nginx sendfile on or off
-    default: on
+    default: "on"
   nginx_tcp_nopush:
     description: Nginx tcp_nopush on or off
-    default: on
+    default: "on"
   nginx_tcp_nodelay:
     description: Nginx tcp_nodelay on or off
-    default: on
+    default: "on"
   nginx_keepalive_timeout:
     description: Nginx keep alive timeout time
     default: 65
@@ -35,7 +35,7 @@ properties:
     default: 2048
   nginx_server_tokens:
     description: Nginx server tokens on or off
-    default: off
+    default: "off"
   nginx_server_names_hash_bucket_size:
     description: Nginx server names hash bucket size
     default: 64
@@ -44,7 +44,7 @@ properties:
     default: application/octet-stream
   nginx_gzip:
     description: Nginx gzip on or off
-    default: on
+    default: "on"
   nginx_gzip_disable:
     description: Nginx gzip disable
     default: msie6
