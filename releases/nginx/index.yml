@@ -3,4 +3,6 @@ builds:
     version: 1.1.13
   b75db89a-ae29-4f92-7a0f-75f511721f89:
     version: 1.1.14
+  b7e6bc78-8764-4032-65de-ba5101557393:
+    version: 1.1.15
 format-version: "2"
