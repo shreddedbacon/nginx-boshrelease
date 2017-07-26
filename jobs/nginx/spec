@@ -57,25 +57,22 @@ properties:
   nginx_servers:
     description: servers
     default:
-      - name: localtest.local
+      - server_name: localtest.local
+        docroot: /var/vcap/store/nginx/www/document_root
+        port: 80
         data: |
-              server {
-                server_name localtest.local;
-                listen 80;
-                access_log /var/vcap/sys/log/nginx/access.log main;
-                error_log /var/vcap/sys/log/nginx/error.log;
-                root /var/vcap/store/nginx/www/document_root;
-                index index.php index.html index.html;
-                location / {
-                    try_files $uri $uri/ =404;
-                }
-                location ~ \.php$ {
-                    try_files $uri =404;
-                    fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                    fastcgi_pass 127.0.0.1:9000;
-                    fastcgi_index index.php;
-                    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                    include fastcgi_params;
-                }
+              access_log /var/vcap/sys/log/nginx/access.log main;
+              error_log /var/vcap/sys/log/nginx/error.log;
+              index index.php index.html index.html;
+              location / {
+                  try_files $uri $uri/ =404;
+              }
+              location ~ \.php$ {
+                  try_files $uri =404;
+                  fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                  fastcgi_pass 127.0.0.1:9000;
+                  fastcgi_index index.php;
+                  fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                  include fastcgi_params;
               }
 

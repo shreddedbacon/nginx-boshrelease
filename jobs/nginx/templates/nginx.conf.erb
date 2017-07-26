@@ -24,8 +24,12 @@ http {
 
 # server blocks start here
 <% for server in p('nginx_servers') %>
-#<%= server['name'] %>
-<%= server['data'] %>
+server {
+  listen <%= server['port'] %>;
+  server_name <%= server['server_name'] %>;
+  root <%= server['docroot'] %>;
+  <%= server['data'] %>
+}
 <% end %>
 # server blocks end here
 }
