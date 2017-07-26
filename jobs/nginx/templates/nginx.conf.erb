@@ -4,16 +4,29 @@ events {
   worker_connections <%= p('nginx_worker_connections') %>;
 }
 http {
+  sendfile <% p('nginx_sendfile') %>;
+  tcp_nopush <% p('nginx_tcp_nopush') %>;
+  tcp_nodelay <% p('nginx_tcp_nodelay') %>;
+  keepalive_timeout <% p('nginx_keepalive_timeout') %>;
+  types_hash_max_size <% p('nginx_types_hash_max_size') %>;
+  server_names_hash_bucket_size <% p('nginx_server_names_hash_bucket_size') %>;
   include /var/vcap/packages/nginx/conf/mime.types;
-  default_type  application/octet-stream;
-  sendfile        on;
-  keepalive_timeout  65;
-  server_names_hash_bucket_size 64;
+  default_type <% p('nginx_default_type') %>;
+  gzip <% p('nginx_gzip') %>;
+  gzip_disable "<% p('nginx_gzip_disable') %>";
   log_format <%= p('nginx_log_format_name') %> '<%= p('nginx_log_format') %>';
+  map $scheme $server_https {
+    default off;
+    https on;
+  }
+
+  include /var/vcap/packages/nginx/conf.d/*.conf;
 
 # server blocks start here
 <% for server in p('nginx_servers') %>
-<%= "#{server}" %>
+<% for item in server %>
+  <%= "#{item}" %>
+<% end %>
 <% end %>
 # server blocks end here
 }

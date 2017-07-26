@@ -18,6 +18,36 @@ properties:
   nginx_worker_connections:
     description: Nginx worker connections
     default: 1024
+  nginx_sendfile:
+    description: Nginx sendfile on or off
+    default: on
+  nginx_tcp_nopush:
+    description: Nginx tcp_nopush on or off
+    default: on
+  nginx_tcp_nodelay:
+    description: Nginx tcp_nodelay on or off
+    default on
+  nginx_keepalive_timeout:
+    description: Nginx keep alive timeout time
+    default: 65
+  nginx_types_hash_max_size:
+    description: Nginx types hash max size
+    default: 2048
+  nginx_server_tokens:
+    description: Nginx server tokens on or off
+    default: off
+  nginx_server_names_hash_bucket_size:
+    description: Nginx server names hash bucket size
+    default: 64
+  nginx_default_type:
+    description: Nginx default type
+    default: application/octet-stream
+  nginx_gzip:
+    description: Nginx gzip on or off
+    default: on
+  nginx_gzip_disable:
+    description: Nginx gzip disable
+    default: msie6
   nginx_log_format_name:
     description: log_format name
     default: main
@@ -27,24 +57,25 @@ properties:
   nginx_servers:
     description: servers
     default:
-      - |
-        server {
-          server_name localtest.local;
-          listen 80;
-          access_log /var/vcap/sys/log/nginx/access.log main;
-          error_log /var/vcap/sys/log/nginx/error.log;
-          root /var/vcap/store/nginx/www/document_root;
-          index index.php index.html index.html;
-          location / {
-              try_files $uri $uri/ =404;
-          }
-          location ~ \.php$ {
-              try_files $uri =404;
-              fastcgi_split_path_info ^(.+\.php)(/.+)$;
-              fastcgi_pass 127.0.0.1:9000;
-              fastcgi_index index.php;
-              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-              include fastcgi_params;
-          }
-        }
+      - name: localtest.local
+        data: |
+              server {
+                server_name localtest.local;
+                listen 80;
+                access_log /var/vcap/sys/log/nginx/access.log main;
+                error_log /var/vcap/sys/log/nginx/error.log;
+                root /var/vcap/store/nginx/www/document_root;
+                index index.php index.html index.html;
+                location / {
+                    try_files $uri $uri/ =404;
+                }
+                location ~ \.php$ {
+                    try_files $uri =404;
+                    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                    fastcgi_pass 127.0.0.1:9000;
+                    fastcgi_index index.php;
+                    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                    include fastcgi_params;
+                }
+              }
 
