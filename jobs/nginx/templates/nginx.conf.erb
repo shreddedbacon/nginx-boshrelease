@@ -24,9 +24,7 @@ http {
 
 # server blocks start here
 <% for server in p('nginx_servers') %>
-<% for item in server %>
-  <%= "#{item}" %>
-<% end %>
+#  <%= "#{server}" %>
 <% end %>
 # server blocks end here
 }
