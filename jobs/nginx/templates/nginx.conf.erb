@@ -1,8 +1,17 @@
+########################################################################
+#
+#   This is the basic nginx configuration block
+#
 worker_processes <%= p('nginx_worker_processes') %>;
 error_log /var/vcap/sys/log/nginx/error.log   info;
 events {
   worker_connections <%= p('nginx_worker_connections') %>;
 }
+
+########################################################################
+#
+#   Defaults are specified for most things and don't need to be defined unless you want to override
+#
 http {
   sendfile <%= p('nginx_sendfile') %>;
   tcp_nopush <%= p('nginx_tcp_nopush') %>;
@@ -20,17 +29,44 @@ http {
     https on;
   }
 
-  include /var/vcap/packages/nginx/conf.d/*.conf;
-
-# server blocks start here
+########################################################################
+#
+#   Server blocks start here
+#
 <% for server in p('nginx_servers') %>
+########################################################################
+#
+#   This block is for <% server['server_name'] %>
+#   Data is defined in deployment manifest, defaults for most common things are
+#   listen <port>
+#   server_name <server_name>
+#   root <docroot>
+#   access_log <access_log>
+#   error_log <error_log
+#   index <index>
+#
+#   <custom_data> is for anything else, like location blocks or other non-specific configs
+#
+#
 server {
 listen <%= server['port'] %>;
 server_name <%= server['server_name'] %>;
 root <%= server['docroot'] %>;
-<%= server['data'] %>
+access_log <%= server['access_log'] %> <%= p('nginx_log_format_name') %>;
+error_log <%= server['error_log'] %>;
+index <%= server['index'] %>;
+<%= server['custom_data'] %>
 }
+#
+#
+########################################################################
 <% end %>
-# server blocks end here
+#
+#   server blocks end here
+#
+########################################################################
 }
-
+#
+#   Configuration end
+#
+########################################################################

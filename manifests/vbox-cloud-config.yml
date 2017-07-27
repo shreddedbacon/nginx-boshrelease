@@ -5,17 +5,18 @@ networks:
 - name: default
   type: manual
   subnets:
-  - azs: [z1]
-    range: 10.244.0.0/24
-    reserved: [10.244.0.1]
-    static: [10.244.0.2 - 10.244.0.99]
+    - azs: [z1]
+      range: 10.244.0.0/24
+      reserved: [10.244.0.1]
+      static: [10.244.0.2 - 10.244.0.99]
+      dns: [8.8.8.8]
 
 vm_types:
 - name: default
 
 compilation:
-  workers: 1
   az: z1
+  workers: 2
   network: default
   cloud_properties: {}
 

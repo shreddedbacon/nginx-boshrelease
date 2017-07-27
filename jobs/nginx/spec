@@ -55,24 +55,24 @@ properties:
     description: log_format used in nginx
     default: '$remote_addr - $remote_user [$time_local]  $status "$request" $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
   nginx_servers:
-    description: servers
+    description: server block configuration
     default:
       - server_name: localtest.local
         docroot: /var/vcap/store/nginx/www/document_root
         port: 80
-        data: |
-              access_log /var/vcap/sys/log/nginx/access.log main;
-              error_log /var/vcap/sys/log/nginx/error.log;
-              index index.php index.html index.html;
-              location / {
-                  try_files $uri $uri/ =404;
-              }
-              location ~ \.php$ {
-                  try_files $uri =404;
-                  fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                  fastcgi_pass 127.0.0.1:9000;
-                  fastcgi_index index.php;
-                  fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                  include fastcgi_params;
-              }
+        index: "index.php index.html index.htm"
+        access_log: /var/vcap/sys/log/nginx/access.log
+        error_log: /var/vcap/sys/log/nginx/error.log
+        custom_data: |
+                     location / {
+                         try_files $uri $uri/ =404;
+                     }
+                     location ~ \.php$ {
+                         try_files $uri =404;
+                         fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                         fastcgi_pass 127.0.0.1:9000;
+                         fastcgi_index index.php;
+                         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                         include fastcgi_params;
+                     }
 
