@@ -48,6 +48,12 @@ properties:
   nginx_gzip_disable:
     description: Nginx gzip disable
     default: msie6
+  nginx_client_max_body_size:
+    description: Nginx max body size
+    default: 20m
+  nginx_client_body_buffer_size:
+    description: Nginx body buffer size
+    default: 128k
   nginx_log_format_name:
     description: log_format name
     default: main

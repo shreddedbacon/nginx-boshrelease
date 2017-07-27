@@ -23,6 +23,8 @@ http {
   default_type <%= p('nginx_default_type') %>;
   gzip <%= p('nginx_gzip') %>;
   gzip_disable "<%= p('nginx_gzip_disable') %>";
+  client_max_body_size <%= p('nginx_client_max_body_size') %>;
+  client_body_buffer_size <%= p('nginx_client_body_buffer_size') %>;
   log_format <%= p('nginx_log_format_name') %> '<%= p('nginx_log_format') %>';
   map $scheme $server_https {
     default off;
@@ -36,7 +38,7 @@ http {
 <% for server in p('nginx_servers') %>
 ########################################################################
 #
-#   This block is for <% server['server_name'] %>
+#   This block is for <%= server['server_name'] %>
 #   Data is defined in deployment manifest, defaults for most common things are
 #   listen <port>
 #   server_name <server_name>
