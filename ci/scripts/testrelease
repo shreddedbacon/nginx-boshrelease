@@ -34,7 +34,7 @@ cat > ./stemcell-version.yml << EOF
 ---
 - type: replace
   path: /stemcells/alias=default/version
-  value: ${STEMCELL_VER}
+  value: '${STEMCELL_VER}'
 
 EOF
 
