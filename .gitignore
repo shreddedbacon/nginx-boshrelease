@@ -13,3 +13,4 @@ releases/**/*.tgz
 *#
 #*
 ci/vars.yml
+.envrc

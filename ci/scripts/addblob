@@ -15,10 +15,10 @@ EOF
 pushd bosh-release
   # Determine old blob name, and new blob name
   OLD_FILE=$(egrep -o "${BLOB_NAME}-(.*).${BLOB_EXTENSION}" packages/${PACKAGE_NAME}/spec)
-  NEW_FILE=${BLOB_NAME}-$(cat ../github-release/version).${BLOB_EXTENSION}
+  NEW_FILE=${BLOB_NAME}-$(cat ../external-release/version).${BLOB_EXTENSION}
 
   # Add the new blob to blobs.yml
-  bosh add-blob ../github-release/*.tar.gz ${PACKAGE_NAME}/${NEW_FILE}
+  bosh add-blob ../external-release/*.tar.gz ${PACKAGE_NAME}/${NEW_FILE}
   # Remove old file blob from blobs.yml, the old file is no longer required for development purposes and final release tarballs contain the source files external to blobs.yml
   bosh remove-blob ${PACKAGE_NAME}/${OLD_FILE}
   # Upload the newly added blobs
