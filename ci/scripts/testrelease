@@ -27,6 +27,7 @@ export BOSH_CA_CERT=${BOSH_CA_CERT}
 export BOSH_CLIENT=${BOSH_USERNAME}
 export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
 
+cat bosh-stemcell/version
 
 header "Create operations file to specify stemcell version to use from the stemcell resource"
 cat > ./stemcell-version.yml << EOF
@@ -34,6 +35,7 @@ cat > ./stemcell-version.yml << EOF
 - type: replace
   path: /stemcells/alias=default/version
   value: $(cat bosh-stemcell/version)
+
 EOF
 
 set -e
