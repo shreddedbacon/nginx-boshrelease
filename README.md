@@ -192,9 +192,10 @@ Add the route so you can access the server once its deployed
 ```
 sudo route add -net 10.244.0.0/16 gw 192.168.50.6
 ```
+Configure a vhost in manifests/vhost.yml
 Run the deployment
 ```
-bosh -e vbox -d nginx deploy manifests/deployment.yml
+bosh -e vbox -d nginx deploy manifests/deployment.yml -o manifests/vhost.yml
 ```
 Watch as the director creates an nginx instance, you can visit the static page here: http://10.244.0.50
 
