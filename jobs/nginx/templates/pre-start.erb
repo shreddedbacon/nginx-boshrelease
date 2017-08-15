@@ -1,11 +1,16 @@
 #!/bin/bash -ex
-DOCROOTS=$(cat /var/vcap/jobs/nginx/etc/nginx.conf | grep "root /" | awk '{print $2}' | rev | cut -c 2- | rev)
-for docroot in ${DOCROOTS}
+
+nginx_docroots=$(cat /var/vcap/jobs/nginx/etc/nginx.conf | grep "root /" | awk '{print $2}' | rev | cut -c 2- | rev)
+
+for docroot in ${nginx_docroots}
 do
-  NGINX_DIR=${docroot}
-  if [ ! -d $NGINX_DIR ]; then
-    mkdir -p $NGINX_DIR
-    echo "" > ${NGINX_DIR}/index.html
-    chown -R vcap:vcap $NGINX_DIR
+
+  nginx_dir=${docroot}
+
+  if [ ! -d ${nginx_dir} ]; then
+    mkdir -p ${nginx_dir}
+    echo "" > ${nginx_dir}/index.html
+    chown -R vcap:vcap ${nginx_dir}
   fi
+
 done
