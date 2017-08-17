@@ -20,9 +20,10 @@ pushd ${nginx_dir}
     --prefix=${BOSH_INSTALL_TARGET} \
     --with-pcre=../${pcre_dir} \
     --with-zlib=../${zlib_dir} \
-    --with-http-gunzip-module \
+    --with-http_gunzip_module \
     --with-http_dav_module \
     --with-http_realip_module \
+    --with-http_v2_module \
     --with-stream \
     --with-threads \
 
