@@ -14,7 +14,7 @@ packages:
 properties:
   nginx_user:
     description: user to run nginx
-    default: 'nobody'
+    default:
   nginx_worker_processes:
     description: Nginx worker processes count
     default: 1
