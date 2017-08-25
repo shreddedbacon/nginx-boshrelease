@@ -12,6 +12,9 @@ packages:
   - nginx
 
 properties:
+  nginx_user:
+    description: user to run nginx
+    default: 'nobody'
   nginx_worker_processes:
     description: Nginx worker processes count
     default: 1
@@ -60,9 +63,15 @@ properties:
   nginx_log_format:
     description: log_format used in nginx
     default: '$remote_addr - $remote_user [$time_local]  $status "$request" $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
+  custom_includes:
+    description: a list of custom includes
+    default: |
+             # list includes
+             # include /path/to/includes/*;
   nginx_servers:
     description: server block configuration
     default:
+    example:
       - server_name: localtest.local
         docroot: /var/vcap/store/nginx/www/document_root
         port: 80

@@ -2,11 +2,13 @@
 #
 #   This is the basic nginx configuration block
 #
+user <%= p('nginx_user');
 worker_processes <%= p('nginx_worker_processes') %>;
 error_log /var/vcap/sys/log/nginx/error.log   info;
 events {
   worker_connections <%= p('nginx_worker_connections') %>;
 }
+
 
 ########################################################################
 #
@@ -35,6 +37,7 @@ http {
 #
 #   Server blocks start here
 #
+<% if_p('nginx_servers') %>
 <% for server in p('nginx_servers') %>
 ########################################################################
 #
@@ -63,6 +66,8 @@ index <%= server['index'] %>;
 #
 ########################################################################
 <% end %>
+<% end %>
+<%= p('custom_includes') %>
 #
 #   server blocks end here
 #
