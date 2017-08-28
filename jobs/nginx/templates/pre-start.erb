@@ -2,6 +2,9 @@
 
 nginx_docroots=$(cat /var/vcap/jobs/nginx/etc/nginx.conf | grep "root /" | awk '{print $2}' | rev | cut -c 2- | rev)
 
+# set up symbolic link
+ln -s /var/vcap/jobs/nginx/bin/ctl /etc/init.d/nginx
+
 for docroot in ${nginx_docroots}
 do
 

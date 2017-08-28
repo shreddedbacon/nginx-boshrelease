@@ -21,6 +21,14 @@ case $1 in
   stop)
     kill $(cat $PIDFILE)
     ;;
+  reload)
+    kill $(cat $PIDFILE)
+    $BASE_DIR/packages/nginx/sbin/$JOB_NAME -g "pid $PIDFILE;" -c $CONFIG_FILE
+    ;;
+  restart)
+    kill $(cat $PIDFILE)
+    $BASE_DIR/packages/nginx/sbin/$JOB_NAME -g "pid $PIDFILE;" -c $CONFIG_FILE
+    ;;
   *)
     echo "Usage: ctl {start|stop}"
     ;;
