@@ -22,8 +22,10 @@ case $1 in
     kill $(cat $PIDFILE)
     ;;
   reload)
-    kill $(cat $PIDFILE)
-    $BASE_DIR/packages/nginx/sbin/$JOB_NAME -g "pid $PIDFILE;" -c $CONFIG_FILE
+    if [ -e $PIDFILE ]
+    then
+      kill -s HUP $(cat $PIDFILE)
+    fi
     ;;
   restart)
     kill $(cat $PIDFILE)
