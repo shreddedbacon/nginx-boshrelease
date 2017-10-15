@@ -42,16 +42,16 @@ jobs:
             BOSH_DEPLOYMENT: ((bosh.deployment))
             BOSH_CA_CERT: ((bosh.ca_cert))
 #            TEST_ERRAND: ((bosh.test-errand))
-#      on_success:
-#        put: notify
-#        params:
-#          channe: ((slack.channel))
-#          text: '((pipeline.name)): testflight success!'
-#      on_failure:
-#        put: notify
-#        params:
-#          channel:  ((slack.channel))
-#          text:    '((pipeline.name)): testflight failed :('
+      on_success:
+        put: notify
+        params:
+          channe: ((slack.channel))
+          text: '((pipeline.name)): test-release success!'
+      on_failure:
+        put: notify
+        params:
+          channel:  ((slack.channel))
+          text:    '((pipeline.name)): test-release failed :('
 
   - name: bump-rc
     public: true
@@ -151,16 +151,16 @@ jobs:
         put: version
         params:
           bump: patch
-#      on_success:
-#        put: notify
-#        params:
-#          channel: ((slack.channel))
-#          text: '((pipeline.name)): new release'
-#      on_failure:
-#        put: notify
-#        params:
-#          channel:  ((slack.channel))
-#          text:    '((pipeline.name)): shipit job failed'
+      on_success:
+        put: notify
+        params:
+          channel: ((slack.channel))
+          text: '((pipeline.name)): promote-release success'
+      on_failure:
+        put: notify
+        params:
+          channel:  ((slack.channel))
+          text:    '((pipeline.name)): promote-release job failed'
 
 
 resource_types:
@@ -219,5 +219,5 @@ resources:
   - name: bosh-stemcell
     type: bosh-io-stemcell
     source:
-      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
-
+      name: ((bosh.stemcell))
+      #      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
