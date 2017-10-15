@@ -20,6 +20,7 @@ jobs:
           trigger: true
         - get: version
         - get: bosh-stemcell
+          version: {version: ((bosh.stemcell_version))}
           trigger: true
       - task: test-release
         config:

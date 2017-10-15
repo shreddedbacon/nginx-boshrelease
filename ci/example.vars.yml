@@ -25,6 +25,8 @@ github:
     -----END RSA PRIVATE KEY-----
 
 bosh:
+  stemcell: 'bosh-aws-xen-hvm-ubuntu-trusty-go_agent'
+  stemcell_version: '3445.11'
   deployment: 'nginx'
   target: http://192.168.50.6:25555
   username: 'admin'
