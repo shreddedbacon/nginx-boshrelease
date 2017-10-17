@@ -43,16 +43,18 @@ jobs:
             BOSH_DEPLOYMENT: ((bosh.deployment))
             BOSH_CA_CERT: ((bosh.ca_cert))
 #            TEST_ERRAND: ((bosh.test-errand))
-#      on_success:
-#        put: notify
-#        params:
-#          channe: ((slack.channel))
-#          text: '((pipeline.name)): test-release success!'
+      on_success:
+        put: notify
+        params:
+          channe: ((slack.channel))
+          icon_url: ((slack.icon_success))
+          text: 'Successful test of release for ((pipeline.name))'
       on_failure:
         put: notify
         params:
           channel:  ((slack.channel))
-          text:    '((pipeline.name)): test-release failed :('
+          icon_url: ((slack.icon_fail))
+          text:    'Failure of test-release for ((pipeline.name))'
 
   - name: bump-rc
     public: true
@@ -67,7 +69,8 @@ jobs:
         put: notify
         params:
           channel:  ((slack.channel))
-          text:    '((pipeline.name)) : rc job failed '
+          icon_url: ((slack.icon_fail))
+          text:    'Failed to bump RC version for ((pipeline.name))'
 
   - name: bump-minor
     public: true
@@ -79,7 +82,8 @@ jobs:
         put: notify
         params:
           channel:  ((slack.channel))
-          text:    '((pipeline.name)) : minor job failed'
+          icon_url: ((slack.icon_fail))
+          text:    'Failure to bump minor version for ((pipeline.name))'
 
   - name: bump-major
     public: true
@@ -91,7 +95,8 @@ jobs:
         put: notify
         params:
           channel:  ((slack.channel))
-          text:    '((pipeline.name)) : major job failed'
+          icon_url: ((slack.icon_fail))
+          text:    'Failure to bump major version for ((pipeline.name))'
 
   - name: promote-release
     public: true
@@ -156,14 +161,15 @@ jobs:
         put: notify
         params:
           channel: ((slack.channel))
-          icon: 'https://blog.altoros.com/wp-content/uploads/2016/05/concourse-ci-7809479.png'
+          icon_url: ((slack.icon_success))
 #          text: '((pipeline.name)): promote-release success'
           text_file: gh/notification
       on_failure:
         put: notify
         params:
           channel:  ((slack.channel))
-          text:    '((pipeline.name)): promote-release job failed'
+          icon_url: ((slack.icon_fail))
+          text:    'Failed to promote release of job for ((pipeline.name))'
 
 
 resource_types:

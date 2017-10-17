@@ -7,6 +7,9 @@ pipeline:
   name: 'nginx-boshrelease'
 slack:
   channel: ## SLACK CHANNEL
+  icon: https://image.ibb.co/nm04Lm/concourse_ci_7809479.png
+  icon_fail: https://image.ibb.co/hs7jLm/fail_concourse_ci_7809479.png
+  icon_success: https://image.ibb.co/kwWYD6/success_concourse_ci_7809479.png
   webhook: ## SLACK WEBHOOK
 aws:
   access_key: 'minio'
