@@ -156,7 +156,8 @@ jobs:
         put: notify
         params:
           channel: ((slack.channel))
-          text: '((pipeline.name)): promote-release success'
+          icon: https://blog.altoros.com/wp-content/uploads/2016/05/concourse-ci-7809479.png
+          text_file: gh/notification
       on_failure:
         put: notify
         params:

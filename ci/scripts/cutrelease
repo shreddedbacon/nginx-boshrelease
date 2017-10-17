@@ -55,8 +55,11 @@ echo "${RELEASE_NAME} v${VERSION}"         > gh/name
 echo "Release ${RELEASE_NAME} v${VERSION}" > gh/notes.md
 cp bosh-release/releases/${RELEASE_NAME2}/${RELEASE_NAME2}-${VERSION}.tgz  gh/artifacts
 
+#cat > gh/notification <<EOF
+#<!here> New ${RELEASE_NAME} v${VERSION} released!
+#EOF
 cat > gh/notification <<EOF
-<!here> New ${RELEASE_NAME} v${VERSION} released!
+New ${RELEASE_NAME} v${VERSION} released!
 EOF
 
 
