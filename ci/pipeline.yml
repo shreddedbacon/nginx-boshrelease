@@ -43,11 +43,11 @@ jobs:
             BOSH_DEPLOYMENT: ((bosh.deployment))
             BOSH_CA_CERT: ((bosh.ca_cert))
 #            TEST_ERRAND: ((bosh.test-errand))
-      on_success:
-        put: notify
-        params:
-          channe: ((slack.channel))
-          text: '((pipeline.name)): test-release success!'
+#      on_success:
+#        put: notify
+#        params:
+#          channe: ((slack.channel))
+#          text: '((pipeline.name)): test-release success!'
       on_failure:
         put: notify
         params:
@@ -156,7 +156,8 @@ jobs:
         put: notify
         params:
           channel: ((slack.channel))
-          icon: https://blog.altoros.com/wp-content/uploads/2016/05/concourse-ci-7809479.png
+          icon: 'https://blog.altoros.com/wp-content/uploads/2016/05/concourse-ci-7809479.png'
+#          text: '((pipeline.name)): promote-release success'
           text_file: gh/notification
       on_failure:
         put: notify
