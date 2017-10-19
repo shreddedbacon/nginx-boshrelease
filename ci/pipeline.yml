@@ -56,16 +56,13 @@ jobs:
           run:
             path: ./bosh-release/ci/scripts/addblob
           params:
-            BLOB_NAME: ((blob.nginx.name))
-            BLOB_EXTENSION: ((blob.nginx.extension))
-            PACKAGE_NAME: ((blob.nginx.package))
             AWS_BUCKET: ((blob.nginx.aws.bucket))
             AWS_ACCESS_KEY:       ((blob.nginx.aws.access_key))
             AWS_SECRET_KEY:       ((blob.nginx.aws.secret_key))
-      - name: upload-git
-        put: bosh-release
-        params:
-          repository: pushgit/bosh-release
+#      - name: upload-git
+#        put: bosh-release
+#        params:
+#          repository: pushgit/bosh-release
       on_success:
         put: notify
         params:

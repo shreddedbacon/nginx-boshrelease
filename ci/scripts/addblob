@@ -4,6 +4,34 @@ set -eu -o pipefail
 
 ls **/
 
+pushd bosh-release
+  OLD_NGINX=$(egrep -o "nginx-(.*).tar.gz" packages/nginx/spec)
+  OLD_PCRE=$(egrep -o "pcre-(.*).tar.gz" packages/nginx/spec)
+  OLD_ZLIB=$(egrep -o "zlib-(.*).tar.gz" packages/nginx/spec)
+  NEW_NGINX=nginx-$(cat ../nginx-external/version).tar.gz
+  NEW_PCRE=pcre-$(cat ../pcre-external/version).tar.gz
+  NEW_ZLIB=zlib-$(cat ../zlib-external/version).tar.gz
+
+  if [ "$OLD_NGINX" == "$NEW_NGINX" ]
+  then
+    echo "Nginx version has not changed"
+  else
+    echo "Nginx version has changed"
+  fi
+  if [ "$OLD_PCRE" == "$NEW_PCRE" ]
+  then
+    echo "PCRE version has not changed"
+  else
+    echo "PCRE version has changed"
+  fi
+  if [ "$OLD_ZLIB" == "$NEW_ZLIB" ]
+  then
+    echo "ZLIB version has not changed"
+  else
+    echo "ZLIB version has changed"
+  fi
+popd
+
 #!## Create the private.yml file for uploading the blob
 #!#cat > bosh-release/config/private.yml << EOF
 #!#---
