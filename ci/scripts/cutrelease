@@ -60,7 +60,7 @@ cat >> gh/notes.md <<EOF
 ### Deployment
 \`\`\`yaml
 releases:
-- name: $RELEASE_NAME
+- name: $RELEASE_NAME2
   version: $VERSION
   sha1: $SHA1
 \`\`\`
@@ -71,13 +71,13 @@ cat > bosh-release/manifests/latestversion.yml << EOF
 ---
 # Operation file for version ${VERSION}
 - type: replace
-  path: /releases/name=${RELEASE_NAME}?/version?
+  path: /releases/name=${RELEASE_NAME2}?/version?
   value: ${VERSION}
 - type: replace
-  path: /releases/name=${RELEASE_NAME}/sha1?
+  path: /releases/name=${RELEASE_NAME2}/sha1?
   value: ${SHA1}
 - type: replace
-  path: /releases/name=${RELEASE_NAME}/url?
+  path: /releases/name=${RELEASE_NAME2}/url?
   value: https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/v${VERSION}/${RELEASE_NAME2}-${VERSION}.tgz
 EOF
 
