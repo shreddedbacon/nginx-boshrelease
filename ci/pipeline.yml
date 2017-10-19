@@ -57,6 +57,7 @@ jobs:
           run:
             path: ./bosh-release/ci/scripts/addblob
           params:
+            PIPELINE_NAME: ((pipeline.name))
             AWS_BUCKET: ((blob.nginx.aws.bucket))
             AWS_ACCESS_KEY:       ((blob.nginx.aws.access_key))
             AWS_SECRET_KEY:       ((blob.nginx.aws.secret_key))
