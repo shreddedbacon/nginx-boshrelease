@@ -28,7 +28,7 @@ pushd bosh-release
     echo "Nginx version has changed" >> ../message/body
     echo "Old: $OLD_NGINX, New: $NEW_NGINX" >> ../message/body
     BUMP_VERSIONS=${NEW_NGINX::-7},
-    bosh add-blob ../nginx-external/$NEW_NGINX nginx/$NEW_NGINX
+    bosh add-blob ../nginx-external/*.tar.gz nginx/$NEW_NGINX
     bosh remove-blob nginx/$OLD_NGINX
     sed -i "s/$OLD_NGINX/$NEW_NGINX/g" packages/nginx/spec
     sed -i "s/$OLD_NGINX/$NEW_NGINX/g" packages/nginx/packaging
@@ -40,7 +40,7 @@ pushd bosh-release
     echo "PCRE version has changed" >> ../message/body
     echo "Old: $OLD_PCRE, New: $NEW_PCRE" >> ../message/body
     BUMP_VERSIONS=$BUMP_VERSIONS${NEW_PCRE::-7},
-    bosh add-blob ../pcre-external/$NEW_PCRE nginx/$NEW_PCRE
+    bosh add-blob ../pcre-external/*.tar.gz nginx/$NEW_PCRE
     bosh remove-blob nginx/$OLD_PCRE
     sed -i "s/$OLD_PCRE/$NEW_PCRE/g" packages/nginx/spec
     sed -i "s/$OLD_PCRE/$NEW_PCRE/g" packages/nginx/packaging
@@ -52,7 +52,7 @@ pushd bosh-release
     echo "ZLIB version has changed" >> ../message/body
     echo "Old: $OLD_ZLIB, New: $NEW_ZLIB" >> ../message/body
     BUMP_VERSIONS=$BUMP_VERSIONS${NEW_ZLIB::-7},
-    bosh add-blob ../zlib-external/$NEW_ZLIB nginx/$NEW_ZLIB
+    bosh add-blob ../zlib-external/*.tar.gz nginx/$NEW_ZLIB
     bosh remove-blob nginx/$OLD_ZLIB
     sed -i "s/$OLD_ZLIB/$NEW_ZLIB/g" packages/nginx/spec
     sed -i "s/$OLD_ZLIB/$NEW_ZLIB/g" packages/nginx/packaging
