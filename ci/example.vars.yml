@@ -6,41 +6,66 @@ initial_version: 1.0.0
 pipeline:
   name: 'nginx-boshrelease'
 slack:
-  channel: ## SLACK CHANNEL
+  channel: 'channel'
   icon: https://image.ibb.co/nm04Lm/concourse_ci_7809479.png
   icon_fail: https://image.ibb.co/hs7jLm/fail_concourse_ci_7809479.png
   icon_success: https://image.ibb.co/kwWYD6/success_concourse_ci_7809479.png
-  webhook: ## SLACK WEBHOOK
+  webhook: https://slackhook
 aws:
-  access_key: 'minio'
-  secret_key: 'minio123'
-  bucket: 'nginx'
-  endpoint: 'http://10.244.0.22:9001'
-#  endpoint: ''
+  access_key: 'key'
+  secret_key: 'secret'
+  bucket: 'oaktonnginx'
+  endpoint: ''
+  region: 'ap-southeast-2'
 github:
   uri: 'git@github.com:oaktondigital/nginx-boshrelease.git'
   repo: 'nginx-boshrelease'
   owner: 'oaktondigital'
-  access_token: ### GITHUB ACCESS TOKEN
+  access_token: token
   branch: 'master'
   private_key: |
     -----BEGIN RSA PRIVATE KEY-----
     -----END RSA PRIVATE KEY-----
-
 bosh:
   stemcell: 'bosh-aws-xen-hvm-ubuntu-trusty-go_agent'
-  stemcell_version: '3445.11'
+  stemcell_version: 'latest'
+  iaas: 'aws'
   deployment: 'nginx'
-  target: http://192.168.50.6:25555
+  target: http://10.0.0.1:25555
   username: 'admin'
-  password: '9f4uus9swgz97xm90jbg'
+  password: 'password'
   ca_cert: |
     -----BEGIN CERTIFICATE-----
     -----END CERTIFICATE-----
 
-#ops_files:
-#  uri: 'git@github.com:oaktondigital/demo-resources.git'
-#  branch: 'master'
-#  private_key: |
-#    -----BEGIN RSA PRIVATE KEY-----
-#    -----END RSA PRIVATE KEY-----
+blob:
+  nginx:
+    package: 'nginx'
+    extension: 'tar.gz'
+    name: 'nginx'
+    aws:
+      bucket: 'oaktonnginx'
+      access_key: 'key'
+      secret_key: 'secret'
+    version:
+      version: '1.12.0'
+  zlib:
+    version:
+      version: '1.2.11'
+  pcre:
+    prefix: 'pcre-'
+    url: 'https://ftp.pcre.org/pub/pcre/'
+    version:
+      version: '8.41'
+
+
+blob_git:
+  access_token: 'token'
+  nginx:
+    repo: 'nginx'
+    owner: 'nginx'
+    prefix: 'release-'
+  zlib:
+    repo: 'zlib'
+    owner: 'madler'
+    prefix: 'v'
