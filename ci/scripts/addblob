@@ -30,6 +30,7 @@ pushd bosh-release
     BUMP_VERSIONS=${NEW_NGINX::-7},
     bosh add-blob ../nginx-external/*.tar.gz nginx/$NEW_NGINX
     bosh remove-blob nginx/$OLD_NGINX
+    bosh upload-blobs
     sed -i "s/$OLD_NGINX/$NEW_NGINX/g" packages/nginx/spec
     sed -i "s/$OLD_NGINX/$NEW_NGINX/g" packages/nginx/packaging
   fi
@@ -42,6 +43,7 @@ pushd bosh-release
     BUMP_VERSIONS=$BUMP_VERSIONS${NEW_PCRE::-7},
     bosh add-blob ../pcre-external/*.tar.gz nginx/$NEW_PCRE
     bosh remove-blob nginx/$OLD_PCRE
+    bosh upload-blobs
     sed -i "s/$OLD_PCRE/$NEW_PCRE/g" packages/nginx/spec
     sed -i "s/$OLD_PCRE/$NEW_PCRE/g" packages/nginx/packaging
   fi
@@ -54,6 +56,7 @@ pushd bosh-release
     BUMP_VERSIONS=$BUMP_VERSIONS${NEW_ZLIB::-7},
     bosh add-blob ../zlib-external/*.tar.gz nginx/$NEW_ZLIB
     bosh remove-blob nginx/$OLD_ZLIB
+    bosh upload-blobs
     sed -i "s/$OLD_ZLIB/$NEW_ZLIB/g" packages/nginx/spec
     sed -i "s/$OLD_ZLIB/$NEW_ZLIB/g" packages/nginx/packaging
   fi
