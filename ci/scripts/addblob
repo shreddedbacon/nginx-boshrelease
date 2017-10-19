@@ -12,23 +12,34 @@ pushd bosh-release
   NEW_PCRE=pcre-$(cat ../pcre-external/version).tar.gz
   NEW_ZLIB=zlib-$(cat ../zlib-external/version).tar.gz
 
+  >../message/body
+
   if [ "$OLD_NGINX" == "$NEW_NGINX" ]
   then
-    echo "Nginx version has not changed"
+    echo "Nginx version has not changed">> ../message/body
+    echo "Current: $OLD_NGINX">> ../message/body
   else
-    echo "Nginx version has changed"
+    echo "Nginx version has changed" >> ../message/body
+    echo "Old: $OLD_NGINX" >> ../message/body
+    echo "New: $NEW_NGINX" >> ../message/body
   fi
   if [ "$OLD_PCRE" == "$NEW_PCRE" ]
   then
-    echo "PCRE version has not changed"
+    echo "PCRE version has not changed" >> ../message/body
+    echo "Current: $OLD_PCRE" >> ../message/body
   else
-    echo "PCRE version has changed"
+    echo "PCRE version has changed" >> ../message/body
+    echo "Old: $OLD_PCRE" >> ../message/body
+    echo "New: $NEW_PCRE" >> ../message/body
   fi
   if [ "$OLD_ZLIB" == "$NEW_ZLIB" ]
   then
-    echo "ZLIB version has not changed"
+    echo "ZLIB version has not changed" >> ../message/body
+    echo "Current: $OLD_ZLIB" >> ../message/body
   else
-    echo "ZLIB version has changed"
+    echo "ZLIB version has changed" >> ../message/body
+    echo "Old: $OLD_ZLIB" >> ../message/body
+    echo "New: $NEW_ZLIB" >> ../message/body
   fi
 popd
 

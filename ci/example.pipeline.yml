@@ -3,81 +3,13 @@
 groups:
   - name: '((pipeline.name))'
     jobs:
-      - blobs
       - test-release
       - bump-rc
       - promote-release
       - bump-major
       - bump-minor
-  - name: blobs
-    jobs:
-      - blobs
-  - name: test
-    jobs:
-      - test-release
-      - bump-rc
-      - bump-major
-      - bump-minor
-  - name: promote
-    jobs:
-      - promote-release
 
 jobs:
-  - name: blobs
-    public: true
-    serial: true
-    plan:
-    - do:
-      - aggregate:
-        - get: pcre-external
-          version: ((blob.pcre.version))
-        - get: zlib-external
-          version: ((blob.zlib.version))
-          params:
-            include_source_tarball: true
-        - get: nginx-external
-          version: ((blob.nginx.version))
-          params:
-            include_source_tarball: true
-        - get: bosh-release
-      - task: add-upload-blob
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source: {repository: concourse/bosh-cli}
-          inputs:
-            - { name: nginx-external }
-            - { name: pcre-external }
-            - { name: zlib-external }
-            - { name: bosh-release }
-          outputs:
-            - { name: pushgit }
-            - { name: message }
-          run:
-            path: ./bosh-release/ci/scripts/addblob
-          params:
-            AWS_BUCKET: ((blob.nginx.aws.bucket))
-            AWS_ACCESS_KEY:       ((blob.nginx.aws.access_key))
-            AWS_SECRET_KEY:       ((blob.nginx.aws.secret_key))
-#      - name: upload-git
-#        put: bosh-release
-#        params:
-#          repository: pushgit/bosh-release
-      on_success:
-        put: notify
-        params:
-          channel: ((slack.channel))
-          icon_url: ((slack.icon_success))
-          text_file: message/body
-#          text: 'Successfully added new Nginx blob for ((pipeline.name))'
-      on_failure:
-        put: notify
-        params:
-          channel:  ((slack.channel))
-          icon_url: ((slack.icon_fail))
-          text:    'Failed to add new Nginx blob for ((pipeline.name))'
-
   - name: test-release
     public: true
     serial: true
@@ -251,16 +183,6 @@ resource_types:
     source:
       repository: cfcommunity/slack-notification-resource
 
-  - name: git-release-tags
-    type: docker-image
-    source:
-      repository: shreddedbacon/git-release-tags
-
-  - name: http-directory-index
-    type: docker-image
-    source:
-      repository: shreddedbacon/http-directory-index
-
 resources:
   - name: bosh-release
     type: git
@@ -308,30 +230,3 @@ resources:
     source:
       name: ((bosh.stemcell))
       #      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
-
-
-  - name: nginx-external
-    type: git-release-tags
-    source:
-      owner: ((blob_git.nginx.owner))
-      repo: ((blob_git.nginx.repo))
-      token: ((blob_git.access_token))
-      tag_prefix: ((blob_git.nginx.prefix))
-      version_family: '1.12'
-
-  - name: zlib-external
-    type: git-release-tags
-    source:
-      owner: ((blob_git.zlib.owner))
-      repo: ((blob_git.zlib.repo))
-      token: ((blob_git.access_token))
-      tag_prefix: ((blob_git.zlib.prefix))
-
-  - name: pcre-external
-    type: http-directory-index
-    source:
-      url: ((blob.pcre.url))
-      file_prefix: ((blob.pcre.prefix))
-      file_regex: "([0-9]+\\.)?([0-9]+)?"
-      file_extension: .tar.gz
-      file_reverse: false
