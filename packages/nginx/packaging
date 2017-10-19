@@ -1,8 +1,8 @@
 set -e -x
 
 echo "Extracting pcre..."
-pcre_dir=$(tar tf nginx/pcre-8.41.tar.gz --exclude="*/*")
-tar xzvf nginx/pcre-8.41.tar.gz
+pcre_dir=$(tar tf nginx/pcre-8.40.tar.gz --exclude="*/*")
+tar xzvf nginx/pcre-8.40.tar.gz
 
 echo "Extracting zlib..."
 zlib_dir=$(tar tf nginx/zlib-1.2.11.tar.gz --exclude="*/*")
