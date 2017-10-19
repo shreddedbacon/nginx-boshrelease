@@ -112,12 +112,12 @@ jobs:
             BOSH_DEPLOYMENT: ((bosh.deployment))
             BOSH_CA_CERT: ((bosh.ca_cert))
 #            TEST_ERRAND: ((bosh.test-errand))
-      on_success:
-        put: notify
-        params:
-          channe: ((slack.channel))
-          icon_url: ((slack.icon_success))
-          text: 'Successful test of release for ((pipeline.name))'
+#      on_success:
+#        put: notify
+#        params:
+#          channe: ((slack.channel))
+#          icon_url: ((slack.icon_success))
+#          text: 'Successful test of release for ((pipeline.name))'
       on_failure:
         put: notify
         params:
@@ -196,6 +196,8 @@ jobs:
             VERSION_FROM: version/number
             RELEASE_NAME: "((release)) BOSH Release"
             RELEASE_NAME2: ((release))
+            GITHUB_OWNER: ((github.owner))
+            GITHUB_REPO: ((github.repo))
             BRANCH:       ((github.branch))
             BOSH_TARGET:     ((bosh.target))
             BOSH_USERNAME:   ((bosh.username))

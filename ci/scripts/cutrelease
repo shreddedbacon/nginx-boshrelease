@@ -54,6 +54,36 @@ echo "${RELEASE_NAME} v${VERSION}"         > gh/name
 #mv bosh-release/ci/release_notes.md          gh/notes.md
 echo "Release ${RELEASE_NAME} v${VERSION}" > gh/notes.md
 cp bosh-release/releases/${RELEASE_NAME2}/${RELEASE_NAME2}-${VERSION}.tgz  gh/artifacts
+SHA1=$(sha1sum bosh-release/releases/${RELEASE_NAME2}/${RELEASE_NAME2}-${VERSION}.tgz | head -n1 | awk '{print $1}')
+
+cat >> gh/notes.md <<EOF
+### Deployment
+\`\`\`yaml
+releases:
+- name: $RELEASE_NAME
+  version: $VERSION
+  sha1: $SHA1
+\`\`\`
+EOF
+
+# Create an operation file with the version
+cat > bosh-release/manifests/latestversion.yml << EOF
+---
+# Operation file for version ${VERSION}
+- type: replace
+  path: /releases/name=${RELEASE_NAME}?/version?
+  value: ${VERSION}
+- type: replace
+  path: /releases/name=${RELEASE_NAME}/sha1?
+  value: ${SHA1}
+- type: replace
+  path: /releases/name=${RELEASE_NAME}/url?
+  value: https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/v${VERSION}/${RELEASE_NAME2}-${VERSION}.tgz
+EOF
+
+## Maybe look to update the main manifest with new version instead of latest
+#OLD_VERSION=$(echo $(grep -Pzo "(- name\s*:\s*nginx\s*)(\n)(\s*)(version\s*:\s*.*)" bosh-release/manifests/deployment.yml) | grep -o "version:.*$" | awk '{print $2}')
+#sed -e '1h;2,$H;$!d;g' -i -re "s/- name\s*:\s*nginx\s*(\n)(\s*)(version\s*:\s*${OLD_VERSION})/- name: nginx\n  version: ${VERSION}/" bosh-release/manifests/deployment.yml
 
 #cat > gh/notification <<EOF
 #<!here> New ${RELEASE_NAME} v${VERSION} released!
