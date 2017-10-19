@@ -2,7 +2,13 @@
 
 set -eu -o pipefail
 
-ls **/
+cat > bosh-release/config/private.yml << EOF
+---
+blobstore:
+  options:
+    access_key_id: ${AWS_ACCESS_KEY}
+    secret_access_key: ${AWS_SECRET_KEY}
+EOF
 
 pushd bosh-release
   OLD_NGINX=$(egrep -o "nginx-(.*).tar.gz" packages/nginx/spec)
@@ -14,34 +20,56 @@ pushd bosh-release
 
   >../message/body
 
+  BUMP_VERSIONS=""
   if [ "$OLD_NGINX" == "$NEW_NGINX" ]
   then
-    echo "Nginx version has not changed">> ../message/body
-    echo "Current: $OLD_NGINX">> ../message/body
+    echo "Nginx version has not changed, still $OLD_NGINX" >> ../message/body
   else
     echo "Nginx version has changed" >> ../message/body
-    echo "Old: $OLD_NGINX" >> ../message/body
-    echo "New: $NEW_NGINX" >> ../message/body
+    echo "Old: $OLD_NGINX, New: $NEW_NGINX" >> ../message/body
+    BUMP_VERSIONS=${NEW_NGINX::-7},
+    bosh add-blob ../nginx-external/$NEW_NGINX nginx/$NEW_NGINX
+    bosh remove-blob nginx/$OLD_NGINX
+    sed -i "s/$OLD_NGINX/$NEW_NGINX/g" packages/nginx/spec
+    sed -i "s/$OLD_NGINX/$NEW_NGINX/g" packages/nginx/packaging
   fi
   if [ "$OLD_PCRE" == "$NEW_PCRE" ]
   then
-    echo "PCRE version has not changed" >> ../message/body
-    echo "Current: $OLD_PCRE" >> ../message/body
+    echo "PCRE version has not changed, still $OLD_PCRE" >> ../message/body
   else
     echo "PCRE version has changed" >> ../message/body
-    echo "Old: $OLD_PCRE" >> ../message/body
-    echo "New: $NEW_PCRE" >> ../message/body
+    echo "Old: $OLD_PCRE, New: $NEW_PCRE" >> ../message/body
+    BUMP_VERSIONS=$BUMP_VERSIONS${NEW_PCRE::-7},
+    bosh add-blob ../nginx-external/$NEW_PCRE nginx/$NEW_PCRE
+    bosh remove-blob nginx/$OLD_PCRE
+    sed -i "s/$OLD_PCRE/$NEW_PCRE/g" packages/nginx/spec
+    sed -i "s/$OLD_PCRE/$NEW_PCRE/g" packages/nginx/packaging
   fi
   if [ "$OLD_ZLIB" == "$NEW_ZLIB" ]
   then
-    echo "ZLIB version has not changed" >> ../message/body
-    echo "Current: $OLD_ZLIB" >> ../message/body
+    echo "ZLIB version has not changed, still $OLD_ZLIB" >> ../message/body
   else
     echo "ZLIB version has changed" >> ../message/body
-    echo "Old: $OLD_ZLIB" >> ../message/body
-    echo "New: $NEW_ZLIB" >> ../message/body
+    echo "Old: $OLD_ZLIB, New: $NEW_ZLIB" >> ../message/body
+    BUMP_VERSIONS=$BUMP_VERSIONS${NEW_ZLIB::-7},
+    bosh add-blob ../nginx-external/$NEW_ZLIB nginx/$NEW_ZLIB
+    bosh remove-blob nginx/$OLD_ZLIB
+    sed -i "s/$OLD_ZLIB/$NEW_ZLIB/g" packages/nginx/spec
+    sed -i "s/$OLD_ZLIB/$NEW_ZLIB/g" packages/nginx/packaging
+  fi
+  repo_changes=0; git status | grep -q "Changes not staged for commit" && repo_changes=1
+  if [ $repo_changes == 1 ]
+  then
+    git config --global user.name "CICD Robot"
+    git config --global user.email "cicd@oakton.digital"
+    git commit -am "Bump version(s) for ${BUMP_VERSIONS::-1}"
   fi
 popd
+
+if [ $repo_changes == 1 ]
+then
+  cp -a bosh-release pushgit
+fi
 
 #!## Create the private.yml file for uploading the blob
 #!#cat > bosh-release/config/private.yml << EOF
