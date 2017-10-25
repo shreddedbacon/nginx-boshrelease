@@ -1,0 +1,11 @@
+---
+# Operation file for version 1.2.5
+- type: replace
+  path: /releases/name=nginx?/version?
+  value: 1.2.5
+- type: replace
+  path: /releases/name=nginx/sha1?
+  value: 4b19c06703c1bb12a6f76bbcb39f7f4f10084bc0
+- type: replace
+  path: /releases/name=nginx/url?
+  value: https://github.com/oaktondigital/nginx-boshrelease/releases/download/v1.2.5/nginx-1.2.5.tgz
