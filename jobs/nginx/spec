@@ -42,6 +42,9 @@ properties:
   nginx_server_names_hash_bucket_size:
     description: Nginx server names hash bucket size
     default: 64
+  nginx_server_names_hash_max_size:
+    description: server_names_hash_max_size
+    default: 1024
   nginx_default_type:
     description: Nginx default type
     default: application/octet-stream
