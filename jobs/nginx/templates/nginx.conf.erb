@@ -24,6 +24,7 @@ http {
   types_hash_max_size <%= p('nginx_types_hash_max_size') %>;
   server_names_hash_bucket_size <%= p('nginx_server_names_hash_bucket_size') %>;
   server_names_hash_max_size <%= p('nginx_server_names_hash_max_size') %>;
+  server_tokens = <%= p('nginx_server_tokens') %>
   include /var/vcap/packages/nginx/conf/mime.types;
   default_type <%= p('nginx_default_type') %>;
   gzip <%= p('nginx_gzip') %>;
