@@ -1,18 +1,5 @@
 - type: replace
-  path: /instance_groups/name=nginx/jobs/name=nginx/properties?/ssl?/certificates?/-
-  value:
-    name: cert1
-    certificate: |
-      ---- CERT ----
-      sdgsagsdgasdhas sdagasdgasdg
-      ---- ENDCERT ----
-    key: |
-      ---- KEY ----
-      sdgsgsdgasdgas3j55;3
-      ---- ENDKEY ----
-
-- type: replace
-  path: /instance_groups/name=nginx/jobs/name=nginx/properties
+  path: /instance_groups/name=nginx/jobs/name=nginx/properties?
   value:
       nginx_worker_processes: 2
       nginx_worker_connections: 1024
@@ -35,4 +22,17 @@
                          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                          include fastcgi_params;
                      }
+
+- type: replace
+  path: /instance_groups/name=nginx/jobs/name=nginx/properties?/ssl?/certificates?/-
+  value:
+    name: cert1
+    certificate: |
+      ---- CERT ----
+      sdgsagsdgasdhas sdagasdgasdg
+      ---- ENDCERT ----
+    key: |
+      ---- KEY ----
+      sdgsgsdgasdgas3j55;3
+      ---- ENDKEY ----
 
