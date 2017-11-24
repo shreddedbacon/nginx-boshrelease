@@ -6,7 +6,7 @@ templates:
   nginx.conf.erb: etc/nginx.conf
   pre-start.erb: bin/pre-start
   fastcgi_params.erb: etc/fastcgi_params
-  ssl.sh: bin/ssh
+  ssl.sh: bin/ssl
 
 
 packages:
