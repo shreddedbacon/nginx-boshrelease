@@ -1,5 +1,17 @@
 #!/bin/bash -ex
 
+# only readable by owner for this script
+chmod 700 /var/vcap/jobs/nginx/bin/ssl
+# create ssl directory
+mkdir -p /var/vcap/jobs/nginx/ssl/
+
+# ssl script places certificates into ssl directory
+/var/vcap/jobs/nginx/bin/ssl
+
+# clear the file afterwards?
+# > /var/vcap/jobs/nginx/bin/ssl
+
+
 nginx_docroots=$(cat /var/vcap/jobs/nginx/etc/nginx.conf | grep "root /" | awk '{print $2}' | rev | cut -c 2- | rev)
 
 # set up symbolic link
@@ -20,3 +32,5 @@ do
   fi
 
 done
+
+

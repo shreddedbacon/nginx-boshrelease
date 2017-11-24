@@ -1,5 +1,33 @@
 # Nginx Bosh Release
 
+## SSL
+makes certificate available in the following locations, use this yaml
+```
+#location
+/var/vcap/jobs/nginx/ssl/<name>.crt
+/var/vcap/jobs/nginx/ssl/<name>.key
+
+#ops file
+- type: replace
+  path: /instance_groups/name=?/jobs/name=nginx/properties?/ssl?/certificates?/-
+  value:
+    name: certificate1
+    certificate: |
+      #### CERTIFICATE
+    key: |
+      #### Key
+
+- type: replace
+  path: /instance_groups/name=?/jobs/name=nginx/properties?/ssl?/certificates?/-
+  value:
+    name: certificate2
+    certificate: |
+      #### CERTIFICATE
+    key: |
+      #### Key
+
+```
+
 Simple bosh release that compiles nginx-1.12.0 stable with pcre-8.40 and zlib-1.2.11
 
 Source files for these are located in src/nginx/
