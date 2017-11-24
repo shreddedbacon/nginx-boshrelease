@@ -71,12 +71,14 @@ jobs:
           channel: ((slack.channel))
           icon_url: ((slack.icon_success))
           text_file: message/body
+          username: "OaktonDev-CI"
 #          text: 'Successfully added new Nginx blob for ((pipeline.name))'
       on_failure:
         put: notify
         params:
           channel:  ((slack.channel))
           icon_url: ((slack.icon_fail))
+          username: "OaktonDev-FailCI"
           text:    'Failed to add new Nginx blob for ((pipeline.name))'
 
   - name: test-release
@@ -112,17 +114,19 @@ jobs:
             BOSH_DEPLOYMENT: ((bosh.deployment))
             BOSH_CA_CERT: ((bosh.ca_cert))
 #            TEST_ERRAND: ((bosh.test-errand))
-#      on_success:
-#        put: notify
-#        params:
-#          channe: ((slack.channel))
-#          icon_url: ((slack.icon_success))
-#          text: 'Successful test of release for ((pipeline.name))'
+      on_success:
+        put: notify
+        params:
+          channe: ((slack.channel))
+          icon_url: ((slack.icon_success))
+          username: "OaktonDev-CI"
+          text: 'Successful test of release for ((pipeline.name))'
       on_failure:
         put: notify
         params:
           channel:  ((slack.channel))
           icon_url: ((slack.icon_fail))
+          username: "OaktonDev-FailCI"
           text:    'Failure of test-release for ((pipeline.name))'
 
   - name: bump-rc
@@ -139,6 +143,7 @@ jobs:
         params:
           channel:  ((slack.channel))
           icon_url: ((slack.icon_fail))
+          username: "OaktonDev-FailCI"
           text:    'Failed to bump RC version for ((pipeline.name))'
 
   - name: bump-minor
@@ -152,6 +157,7 @@ jobs:
         params:
           channel:  ((slack.channel))
           icon_url: ((slack.icon_fail))
+          username: "OaktonDev-FailCI"
           text:    'Failure to bump minor version for ((pipeline.name))'
 
   - name: bump-major
@@ -165,6 +171,7 @@ jobs:
         params:
           channel:  ((slack.channel))
           icon_url: ((slack.icon_fail))
+          username: "OaktonDev-FailCI"
           text:    'Failure to bump major version for ((pipeline.name))'
 
   - name: promote-release
@@ -233,15 +240,17 @@ jobs:
         params:
           channel: ((slack.channel))
           icon_url: ((slack.icon_success))
+          username: "OaktonDev-CI"
 #          text: '((pipeline.name)): promote-release success'
           text_file: gh/notification
+
       on_failure:
         put: notify
         params:
           channel:  ((slack.channel))
           icon_url: ((slack.icon_fail))
+          username: "OaktonDev-FailCI"
           text:    'Failed to promote release of job for ((pipeline.name))'
-
 
 resource_types:
   - name: bosh-deployment

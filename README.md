@@ -13,18 +13,18 @@ makes certificate available in the following locations, use this yaml
   value:
     name: certificate1
     certificate: |
-      #### CERTIFICATE
+      ---- CERTIFICATE ----
     key: |
-      #### Key
+      ---- KEY ----
 
 - type: replace
   path: /instance_groups/name=?/jobs/name=nginx/properties?/ssl?/certificates?/-
   value:
     name: certificate2
     certificate: |
-      #### CERTIFICATE
+      ---- CERTIFICATE ----
     key: |
-      #### Key
+      ---- KEY ----
 
 ```
 
