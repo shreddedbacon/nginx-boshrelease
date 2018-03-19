@@ -9,8 +9,8 @@ zlib_dir=$(tar tf nginx/zlib-1.2.11.tar.gz --exclude="*/*")
 tar xzvf nginx/zlib-1.2.11.tar.gz
 
 echo "Extracting nginx..."
-nginx_dir=$(tar tf nginx/nginx-1.12.0.tar.gz --exclude="*/*")
-tar xzvf nginx/nginx-1.12.0.tar.gz
+nginx_dir=$(tar tf nginx/nginx-1.12.2.tar.gz --exclude="*/*")
+tar xzvf nginx/nginx-1.12.2.tar.gz
 
 echo "Building nginx..."
 
