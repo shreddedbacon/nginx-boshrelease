@@ -15,7 +15,7 @@ tar xzvf nginx/nginx-1.12.0.tar.gz
 echo "Building nginx..."
 
 pushd ${nginx_dir}
-  ./configure \
+  ./auto/configure \
     --with-debug \
     --prefix=${BOSH_INSTALL_TARGET} \
     --with-pcre=../${pcre_dir} \
