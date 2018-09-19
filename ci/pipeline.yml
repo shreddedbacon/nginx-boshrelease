@@ -329,7 +329,7 @@ resources:
       repo: ((blob_git.nginx.repo))
       token: ((blob_git.access_token))
       tag_prefix: ((blob_git.nginx.prefix))
-      version_family: '1.12'
+      version_family: '1.13'
 
   - name: zlib-external
     type: git-release-tags
