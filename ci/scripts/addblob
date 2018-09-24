@@ -2,7 +2,6 @@
 
 set -eu -o pipefail
 
-# Create the private.yml file for uploading the blob
 cat > bosh-release/config/private.yml << EOF
 ---
 blobstore:
@@ -11,37 +10,107 @@ blobstore:
     secret_access_key: ${AWS_SECRET_KEY}
 EOF
 
-# Go into the directory for the release
 pushd bosh-release
-  # Determine old blob name, and new blob name
-  OLD_FILE=$(egrep -o "${BLOB_NAME}-(.*).${BLOB_EXTENSION}" packages/${PACKAGE_NAME}/spec)
-  NEW_FILE=${BLOB_NAME}-$(cat ../external-release/version).${BLOB_EXTENSION}
+  OLD_NGINX=$(egrep -o "nginx-(.*).tar.gz" packages/nginx/spec)
+  OLD_PCRE=$(egrep -o "pcre-(.*).tar.gz" packages/nginx/spec)
+  OLD_ZLIB=$(egrep -o "zlib-(.*).tar.gz" packages/nginx/spec)
+  NEW_NGINX=nginx-$(cat ../nginx-external/version).tar.gz
+  NEW_PCRE=pcre-$(cat ../pcre-external/version).tar.gz
+  NEW_ZLIB=zlib-$(cat ../zlib-external/version).tar.gz
 
-  # Add the new blob to blobs.yml
-  bosh add-blob ../external-release/*.tar.gz ${PACKAGE_NAME}/${NEW_FILE}
-  # Remove old file blob from blobs.yml, the old file is no longer required for development purposes and final release tarballs contain the source files external to blobs.yml
-  bosh remove-blob ${PACKAGE_NAME}/${OLD_FILE}
-  # Upload the newly added blobs
-  bosh upload-blobs
+  echo "Task blobs finished for $PIPELINE_NAME">../message/body
 
-  # Find and replace any references to the package
-  # Need to work this to check for anything that does popd or cd into directories from the extracted source files
-  # Not all things are created the same or extract the same
-  # Maybe let the test-release fail and require manual intervention to update spec and packaging scripts
-  sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/spec
-  sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/packaging
-
-  # Do GIT stuff
-  git config --global user.name "CICD Robot"
-  git config --global user.email "cicd@oakton.digital"
-
-  git commit -am 'bump release blob'
-
-  # Get out of the directory
+  BUMP_VERSIONS=""
+  if [ "$OLD_NGINX" == "$NEW_NGINX" ]
+  then
+    echo "Nginx version has not changed, still $OLD_NGINX" >> ../message/body
+  else
+    echo "Nginx version has changed" >> ../message/body
+    echo "Old: $OLD_NGINX, New: $NEW_NGINX" >> ../message/body
+    BUMP_VERSIONS=${NEW_NGINX::-7},
+    bosh add-blob ../nginx-external/*.tar.gz nginx/$NEW_NGINX
+    bosh remove-blob nginx/$OLD_NGINX
+    bosh upload-blobs
+    sed -i "s/$OLD_NGINX/$NEW_NGINX/g" packages/nginx/spec
+    sed -i "s/$OLD_NGINX/$NEW_NGINX/g" packages/nginx/packaging
+  fi
+  if [ "$OLD_PCRE" == "$NEW_PCRE" ]
+  then
+    echo "PCRE version has not changed, still $OLD_PCRE" >> ../message/body
+  else
+    echo "PCRE version has changed" >> ../message/body
+    echo "Old: $OLD_PCRE, New: $NEW_PCRE" >> ../message/body
+    BUMP_VERSIONS=$BUMP_VERSIONS${NEW_PCRE::-7},
+    bosh add-blob ../pcre-external/*.tar.gz nginx/$NEW_PCRE
+    bosh remove-blob nginx/$OLD_PCRE
+    bosh upload-blobs
+    sed -i "s/$OLD_PCRE/$NEW_PCRE/g" packages/nginx/spec
+    sed -i "s/$OLD_PCRE/$NEW_PCRE/g" packages/nginx/packaging
+  fi
+  if [ "$OLD_ZLIB" == "$NEW_ZLIB" ]
+  then
+    echo "ZLIB version has not changed, still $OLD_ZLIB" >> ../message/body
+  else
+    echo "ZLIB version has changed" >> ../message/body
+    echo "Old: $OLD_ZLIB, New: $NEW_ZLIB" >> ../message/body
+    BUMP_VERSIONS=$BUMP_VERSIONS${NEW_ZLIB::-7},
+    bosh add-blob ../zlib-external/*.tar.gz nginx/$NEW_ZLIB
+    bosh remove-blob nginx/$OLD_ZLIB
+    bosh upload-blobs
+    sed -i "s/$OLD_ZLIB/$NEW_ZLIB/g" packages/nginx/spec
+    sed -i "s/$OLD_ZLIB/$NEW_ZLIB/g" packages/nginx/packaging
+  fi
+  repo_changes=0; git status | grep -q "Changes not staged for commit" && repo_changes=1
+  if [ $repo_changes == 1 ]
+  then
+    git config --global user.name "CICD Robot"
+    git config --global user.email "cicd@oakton.digital"
+    git commit -am "Bump version(s) for ${BUMP_VERSIONS::-1}"
+  fi
 popd
 
-# Copy the release to push the changes into git
 cp -a bosh-release pushgit
+
+#!## Create the private.yml file for uploading the blob
+#!#cat > bosh-release/config/private.yml << EOF
+#!#---
+#!#blobstore:
+#!#  options:
+#!#    access_key_id: ${AWS_ACCESS_KEY}
+#!#    secret_access_key: ${AWS_SECRET_KEY}
+#!#EOF
+#!#
+#!## Go into the directory for the release
+#!#pushd bosh-release
+#!#  # Determine old blob name, and new blob name
+#!#  OLD_FILE=$(egrep -o "${BLOB_NAME}-(.*).${BLOB_EXTENSION}" packages/${PACKAGE_NAME}/spec)
+#!#  NEW_FILE=${BLOB_NAME}-$(cat ../external-release/version).${BLOB_EXTENSION}
+#!#
+#!#  # Add the new blob to blobs.yml
+#!#  bosh add-blob ../external-release/*.tar.gz ${PACKAGE_NAME}/${NEW_FILE}
+#!#  # Remove old file blob from blobs.yml, the old file is no longer required for development purposes and final release tarballs contain the source files external to blobs.yml
+#!#  bosh remove-blob ${PACKAGE_NAME}/${OLD_FILE}
+#!#  # Upload the newly added blobs
+#!#  bosh upload-blobs
+#!#
+#!#  # Find and replace any references to the package
+#!#  # Need to work this to check for anything that does popd or cd into directories from the extracted source files
+#!#  # Not all things are created the same or extract the same
+#!#  # Maybe let the test-release fail and require manual intervention to update spec and packaging scripts
+#!#  sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/spec
+#!#  sed -i "s/${OLD_FILE}/${NEW_FILE}/g" packages/${PACKAGE_NAME}/packaging
+#!#
+#!#  # Do GIT stuff
+#!#  git config --global user.name "CICD Robot"
+#!#  git config --global user.email "cicd@oakton.digital"
+#!#
+#!#  git commit -am 'bump release blob'
+#!#
+#!#  # Get out of the directory
+#!#popd
+#!#
+#!## Copy the release to push the changes into git
+#!#cp -a bosh-release pushgit
 
 # Exit
 echo "finished uploading a new source blob"

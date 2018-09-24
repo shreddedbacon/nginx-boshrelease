@@ -6,6 +6,7 @@ templates:
   nginx.conf.erb: etc/nginx.conf
   pre-start.erb: bin/pre-start
   fastcgi_params.erb: etc/fastcgi_params
+  ssl.sh: bin/ssl
 
 
 packages:
@@ -42,6 +43,9 @@ properties:
   nginx_server_names_hash_bucket_size:
     description: Nginx server names hash bucket size
     default: 64
+  nginx_server_names_hash_max_size:
+    description: server_names_hash_max_size
+    default: 1024
   nginx_default_type:
     description: Nginx default type
     default: application/octet-stream
@@ -68,6 +72,14 @@ properties:
     default: |
              # list includes
              # include /path/to/includes/*;
+  ssl.certificates:
+    description: ssl certificate
+    example:
+      - name: certificate1
+        certificate: |
+          ## CERTIFICIATE
+        key: |
+          ## KEY
   nginx_servers:
     description: server block configuration
     default:

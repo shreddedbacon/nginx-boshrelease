@@ -1,0 +1,38 @@
+- type: replace
+  path: /instance_groups/name=nginx/jobs/name=nginx/properties?
+  value:
+      nginx_worker_processes: 2
+      nginx_worker_connections: 1024
+      nginx_servers:
+      - server_name: foo.oakton.digital
+        docroot: /var/vcap/store/nginx/www/document_root
+        port: 80
+        index: "index.php index.html index.htm"
+        access_log: /var/vcap/sys/log/nginx/access.log
+        error_log: /var/vcap/sys/log/nginx/error.log
+        custom_data: |
+                     location / {
+                         try_files $uri $uri/ =404;
+                     }
+                     location ~ \.php$ {
+                         try_files $uri =404;
+                         fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                         fastcgi_pass 127.0.0.1:9000;
+                         fastcgi_index index.php;
+                         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                         include fastcgi_params;
+                     }
+
+- type: replace
+  path: /instance_groups/name=nginx/jobs/name=nginx/properties?/ssl?/certificates?/-
+  value:
+    name: cert1
+    certificate: |
+      ---- CERT ----
+      sdgsagsdgasdhas sdagasdgasdg
+      ---- ENDCERT ----
+    key: |
+      ---- KEY ----
+      sdgsgsdgasdgas3j55;3
+      ---- ENDKEY ----
+

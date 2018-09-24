@@ -1,11 +1,11 @@
-nginx/nginx-1.12.0.tar.gz:
-  size: 980831
-  object_id: ac3befc6-1ef7-461b-4a3c-f5583ec6d8da
-  sha: 40733c030d0096fe56513c0a4da65c682ca0a18b
-nginx/pcre-8.40.tar.gz:
-  size: 2065161
-  object_id: b6a2afda-b6d6-4f96-56b3-026bfbf3691a
-  sha: 10384eb3d411794cc15f55b9d837d3f69e35391e
+nginx/nginx-1.12.2.tar.gz:
+  size: 1020485
+  object_id: 4fe901f8-46ad-4e4a-53eb-73c7b1ded897
+  sha: 1a766912bf6158c671b62584ef4769f82654d17a
+nginx/pcre-8.41.tar.gz:
+  size: 2068775
+  object_id: 5aa0d11a-c753-4d01-59c7-f82cc59a4bfa
+  sha: dddf0995aefe04cc6267c1448ffef0e7b0560ec0
 nginx/zlib-1.2.11.tar.gz:
   size: 607698
   object_id: 0ce03f81-8cff-4787-5c6e-cdf6d409894d

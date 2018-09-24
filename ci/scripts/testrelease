@@ -30,11 +30,16 @@ export BOSH_CLIENT_SECRET=${BOSH_PASSWORD}
 STEMCELL_VER=$(cat bosh-stemcell/version)
 
 header "Create operations file to specify stemcell version to use from the stemcell resource"
+header "Replace deployment name with one specified in pipeline"
 cat > ./stemcell-version.yml << EOF
 ---
 - type: replace
   path: /stemcells/alias=default/version
   value: '${STEMCELL_VER}'
+
+- type: replace
+  path: /name
+  value: '${BOSH_DEPLOYMENT}'
 
 EOF
 
@@ -56,7 +61,9 @@ bosh -n -e ${BOSH_TARGET} upload-release || echo "Continuing..."
 
 
 header "Deploying to BOSH..."
-bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml -o ../stemcell-version.yml
+bosh -n -e ${BOSH_TARGET} -d ${BOSH_DEPLOYMENT} d ./manifests/deployment.yml \
+  -o ./manifests/testing.yml \
+  -o ../stemcell-version.yml
 
 #if [[ -n ${TEST_ERRAND} ]]; then
 #  header "Running '${TEST_ERRAND}' validation errand"
